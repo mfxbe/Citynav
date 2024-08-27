@@ -1,0 +1,8 @@
+.venv
+.venv/*
+.idea
+.idea/*
+dist
+dist/*
+stopsdata.py
+assets/maps/*
