@@ -10,7 +10,7 @@ from common import MyPage
 class MapsPage(MyPage):
 	def __init__(self, curSe):
 		# basics
-		super().__init__("Netzpläne")
+		super().__init__("Netzpläne", curSe)
 		self.curSe = curSe
 		curSe["map"] = ""
 
@@ -58,6 +58,7 @@ class MapsPage(MyPage):
 
 	def add_map_item(self, title, description, imageName):
 		def on_click_action():
+			print("Action")
 			self.curSe["map"] = imageName
 			self.mapController.content = ft.Image("maps/" + self.curSe["map"] + ".jpeg", width=1500)
 			self.mapController.left=-550

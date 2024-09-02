@@ -14,7 +14,7 @@ from common import MyPage, color_allocator
 class RoutingPage(MyPage):
     def __init__(self, curSe):
         # basics
-        super().__init__("Verbindungen")
+        super().__init__("Verbindungen", curSe)
         self.curSe = curSe
         curSe["jsonData"] = None
         curSe["time"] = ""

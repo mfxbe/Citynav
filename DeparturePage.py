@@ -14,7 +14,7 @@ from common import MyPage, color_allocator
 class DeparturePage(MyPage):
 	def __init__(self, curSe):
 		# basics
-		super().__init__("Abfahrten")
+		super().__init__("Abfahrten", curSe)
 		self.curSe = curSe
 
 		# Page structure of startPage

@@ -17,7 +17,7 @@ REM_HTAG = re.compile(r'<[^>]+>')
 class ReportsPage(MyPage):
 	def __init__(self, curSe):
 		# basics
-		super().__init__("Meldungen")
+		super().__init__("Meldungen", curSe)
 		self.curSe = curSe
 		self.loaded = None
 

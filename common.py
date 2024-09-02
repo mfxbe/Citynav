@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # Import flet and systems libraries
 import flet as ft
-
+from settings import *
 
 class MyPage(ft.AnimatedSwitcher):
-	def __init__(self, header):
+	def __init__(self, header, curSe):
 		super().__init__(ft.Text(""))
 		self.pages = dict()
 		self.ct = None
 		self.header = header
+		self.curSe = curSe
 
 	def switched(self):
 		pass
@@ -48,7 +49,7 @@ class MyPage(ft.AnimatedSwitcher):
 				title=ft.Text(self.header),
 				bgcolor="#36618e",
 				color="white",
-				actions=[ft.IconButton(ft.icons.MORE_VERT)]
+				actions=[ft.IconButton(ft.icons.MORE_VERT, on_click=lambda e, p=self.page: page_settings(p, self.curSe))]
 			)
 
 			self.page.update()
