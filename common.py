@@ -92,7 +92,7 @@ class StorageHandler():
 		self.theme = self.set_from_storage("theme", "auto")
 		self.results = self.set_from_storage("results", 1)
 		self.connection_history = self.set_from_storage("connection_history", list())
-		self.depatures_history = self.set_from_storage("depatures_history", list())
+		self.departures_history = self.set_from_storage("departures_history", list())
 		self.default = self.set_from_storage("default", 0)
 
 	def set_key(self, key, value):
