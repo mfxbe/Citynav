@@ -99,6 +99,9 @@ def main(page: ft.Page):
 					  ft.NavigationBarDestination(icon=ft.icons.MAP, label="Netzpläne")], selected_index=0,
 		on_change=route_changer)
 
+	#set theme type
+	page.theme_mode = curSe["settings"].get_key("theme")
+
 	# update page to present
 	page.update()
 

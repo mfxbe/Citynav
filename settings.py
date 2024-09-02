@@ -17,12 +17,24 @@ def page_settings(page, curSe):
     settingsView.controls.append(ft.Text("Einstellungen", theme_style=ft.TextThemeStyle.TITLE_MEDIUM))
 
     #colors
+    def dropdown_changed(e):
+        if e.control.value == "Automatisch":
+            value = "auto"
+        elif e.control.value == "Hell":
+            value = "light"
+        else:
+            value = "dark"
+        curSe["settings"].set_key("theme", value)
+        curSe["page"].theme_mode = curSe["settings"].get_key("theme") #set theme according to new setting
+        curSe["page"].update()
+
     colorDropdown =  ft.Dropdown(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[
         ft.dropdown.Option("Automatisch"),
         ft.dropdown.Option("Hell"),
         ft.dropdown.Option("Dunkel"),
     ], value="Automatisch")
     settingsView.controls.append(ft.Row([ft.Text("Farbschema"), colorDropdown], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
+    colorDropdown.on_change = dropdown_changed
 
     #resultss
     def slider_changed(e):
@@ -47,8 +59,11 @@ def page_settings(page, curSe):
     )
     settingsView.controls.append(ft.Row([ft.Text("Ergebnisseanzahl"), resultSlider], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
 
+    def reset_app(_b):
+        curSe["settings"].reset_all()
     delButton = ft.FilledButton(width=200, text="App-Daten löschen", style=ft.ButtonStyle(bgcolor=ft.colors.RED, color="white"))
     settingsView.controls.append(ft.Row([ft.Text("Zurücksetzen"), delButton], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
+    delButton.on_click = reset_app
 
     settingsView.controls.append(ft.Text("", size=12))
 

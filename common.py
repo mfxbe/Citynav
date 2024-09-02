@@ -89,7 +89,7 @@ class StorageHandler():
 		self.prefix = "de.mfxbe.Citynav."
 
 		# Set defaults
-		self.theme = self.set_from_storage("theme", "Auto")
+		self.theme = self.set_from_storage("theme", "auto")
 		self.results = self.set_from_storage("results", 1)
 		self.connection_history = self.set_from_storage("connection_history", list())
 		self.depatures_history = self.set_from_storage("depatures_history", list())
@@ -123,3 +123,8 @@ class StorageHandler():
 			self.p.update()
 
 		return result
+
+	def reset_all(self):
+		appKeys = self.p.client_storage.get_keys(self.prefix + "")
+		for k in appKeys:
+			self.p.client_storage.remove(k)
