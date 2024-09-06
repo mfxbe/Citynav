@@ -100,7 +100,7 @@ def main(page: ft.Page):
 		on_change=route_changer)
 
 	#set theme type
-	page.theme_mode = curSe["settings"].get_key("theme")
+	page.theme_mode = curSe["settings"].theme
 
 	# update page to present
 	page.update()

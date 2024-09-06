@@ -89,21 +89,28 @@ class StorageHandler():
 		self.prefix = "de.mfxbe.Citynav."
 
 		# Set defaults
-		self.theme = self.set_from_storage("theme", "auto")
-		self.results = self.set_from_storage("results", 1)
-		self.connection_history = self.set_from_storage("connection_history", list())
-		self.departures_history = self.set_from_storage("departures_history", list())
-		self.default = self.set_from_storage("default", 0)
-
-	def set_key(self, key, value):
 		try:
-			self.p.client_storage.set(self.prefix + key, value)
-			setattr(self, key, value)
+			self.theme = self.set_from_storage("theme", "auto")
+			self.results = self.set_from_storage("results", 1)
+			self.connection_history = self.set_from_storage("connection_history", list())
+			self.departures_history = self.set_from_storage("departures_history", list())
+			self.default = self.set_from_storage("default", 0)
 		except Exception as e:
 			print(e)
+
+			self.theme = "auto"
+			self.results = 1
+			self.connection_history = list()
+			self.departures_history = list()
+			self.default = 0
+
 			self.p.snack_bar = ft.SnackBar(ft.Text(f"Fehler beim Setzten von Nutzereinstellungen"))
 			self.p.snack_bar.open = True
 			self.p.update()
+
+	def set_key(self, key, value):
+		self.p.client_storage.set(self.prefix + key, value)
+		setattr(self, key, value)
 
 	def get_key(self, key):
 		value = self.p.client_storage.get(self.prefix + key)
@@ -112,15 +119,9 @@ class StorageHandler():
 	def set_from_storage(self, key, default):
 		result = default
 
-		try:
-			if self.p.client_storage.contains_key(self.prefix + key) or self.p.client_storage.get(
-					self.prefix + key) is not None:
-				result = self.p.client_storage.get(self.prefix + key)
-		except Exception as e:
-			print(e)
-			self.p.snack_bar = ft.SnackBar(ft.Text(f"Fehler beim Abrufen von Nutzereinstellungen"))
-			self.p.snack_bar.open = True
-			self.p.update()
+		if self.p.client_storage.contains_key(self.prefix + key) or self.p.client_storage.get(
+				self.prefix + key) is not None:
+			result = self.p.client_storage.get(self.prefix + key)
 
 		return result
 
