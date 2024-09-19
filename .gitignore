@@ -6,3 +6,5 @@ dist
 dist/*
 stopsdata.py
 assets/maps/*
+builds
+build_tmp
