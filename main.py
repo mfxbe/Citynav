@@ -38,6 +38,7 @@ def load_stops():
 
 	return stopsResult
 
+
 # Main function for app startup
 def main(page: ft.Page):
 	global curSe
@@ -53,10 +54,13 @@ def main(page: ft.Page):
 	# Some color fixes and preferences
 	# page.theme_mode = ft.ThemeMode.DARK
 	page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary=ft.colors.BACKGROUND),
-						  search_bar_theme=ft.SearchBarTheme(elevation=1))
+						  search_bar_theme=ft.SearchBarTheme(elevation=1),
+						  system_overlay_style=ft.SystemOverlayStyle(status_bar_brightness=ft.Brightness.DARK))
 	page.dark_theme = ft.theme.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
 									 text_theme=ft.TextTheme(
-										 title_medium=ft.TextStyle(weight=ft.FontWeight.NORMAL, color="white")))
+										 title_medium=ft.TextStyle(weight=ft.FontWeight.NORMAL, color="white")),
+									 system_overlay_style=ft.SystemOverlayStyle(
+										 status_bar_brightness=ft.Brightness.DARK))
 
 	# setup pages
 	routingPage = RoutingPage.RoutingPage(curSe)
@@ -118,12 +122,12 @@ def main(page: ft.Page):
 			on_change=route_changer
 		)
 
-
 	# set theme type
 	page.theme_mode = curSe["settings"].theme
 
 	# update page to present
 	page.add(mainContainer)
 	page.update()
+
 
 ft.app(main)
