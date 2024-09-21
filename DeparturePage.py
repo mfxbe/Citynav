@@ -52,14 +52,20 @@ class DeparturePage(MyPage):
 		goButton.on_click = do_action
 
 		# detailsPage (basics more see display_result_page)
-		self.detailsPage = ft.Column()
-		self.add_sub("detailsPage", ft.Container(self.detailsPage, padding=10, expand=True), "startPage")
+		self.detailsPage = ft.Column(expand=True)
+		self.add_sub("detailsPage", ft.Container(self.detailsPage, padding=0, expand=True), "startPage")
 
 	def display_result_page(self):
 		curSe = self.curSe
-		listview = ft.ListView()
+		listview = ft.ListView(padding=10)
 		listview.expand = True
 		self.detailsPage.controls.clear()
+
+		self.detailsPage.controls.append(ft.Container(
+			ft.Row([ft.Text(curSe["position"], theme_style=ft.TextThemeStyle.TITLE_MEDIUM)],
+				   alignment=ft.MainAxisAlignment.CENTER),
+			bgcolor=ft.colors.OUTLINE_VARIANT, padding=10))
+
 		self.detailsPage.controls.append(listview)
 		self.detailsPage.expand = True
 
@@ -101,8 +107,6 @@ class DeparturePage(MyPage):
 				else:
 					cont = ft.Container(ft.Text(d["label"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
 										alignment=ft.alignment.center)
-
-
 
 				entry = ft.Row([
 					ft.Row([
