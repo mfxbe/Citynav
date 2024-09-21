@@ -3,6 +3,28 @@
 import flet as ft
 from settings import *
 
+def stop_pos_finder(d):
+	if "platform" in d:
+		platformContainer = ft.Container(
+			ft.Text(d["platform"], text_align=ft.TextAlign.CENTER, size=8, color=ft.colors.ON_SECONDARY_CONTAINER),
+			alignment=ft.alignment.center,
+			width=8,
+			height=15,
+			bgcolor=ft.colors.SECONDARY_CONTAINER
+		)
+	elif "stopPositionNumber" in d:
+		platformContainer = ft.Container(
+			ft.Text(d["stopPositionNumber"], text_align=ft.TextAlign.CENTER, size=8, color=ft.colors.ON_SECONDARY_CONTAINER),
+			alignment=ft.alignment.center,
+			width=8,
+			height=15,
+			bgcolor=ft.colors.SECONDARY_CONTAINER
+		)
+	else:
+		platformContainer = ft.Text(" ", size=8) #empty text field as placeholder if there is no platform
+
+	return platformContainer
+
 class MyPage(ft.AnimatedSwitcher):
 	def __init__(self, header, curSe):
 		super().__init__(ft.Text(""))
