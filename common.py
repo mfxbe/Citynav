@@ -21,8 +21,15 @@ class MyPage(ft.AnimatedSwitcher):
 		self.page.update()
 
 	def switch_sub(self, title, notify=True):
+		if self.page.platform == ft.PagePlatform.ANDROID or self.page.platform == ft.PagePlatform.IOS:
+			c = self.pages[title]
+		else:
+			# handle display of navigation rail for desktop
+			c = ft.Row([self.page.rail, ft.VerticalDivider(width=1), self.pages[title]], expand=True, spacing=0)
+
+
 		self.ct = title
-		self.content = self.pages[title]
+		self.content = c
 		self.navbar_helper(self.pages[title].my_page_parent)
 		if notify:
 			self.switched()

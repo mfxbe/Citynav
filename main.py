@@ -38,14 +38,12 @@ def load_stops():
 
 	return stopsResult
 
-
 # Main function for app startup
 def main(page: ft.Page):
 	global curSe
 
 	# basic
 	page.title = "Citynav München"
-	page.window.width = 400
 
 	# set basic common data
 	curSe["stops"] = load_stops()  # load stop data
@@ -66,11 +64,10 @@ def main(page: ft.Page):
 	reportsPage = ReportsPage.ReportsPage(curSe)
 	mapsPage = MapsPage.MapsPage(curSe)
 	mainContainer = ft.Container(content=routingPage)
-	page.add(mainContainer)
 	mainContainer.expand = True
 	page.padding = 0
 
-	# Add mobile navigation bar to page
+	# Add navigation to page
 	def route_changer(e):
 		index = e.control.selected_index
 		if index == 0:
@@ -96,18 +93,37 @@ def main(page: ft.Page):
 
 		mainContainer.update()
 
-	page.navigation_bar = ft.NavigationBar(
-		destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
-					  ft.NavigationBarDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
-					  ft.NavigationBarDestination(icon=ft.icons.LIST, label="Meldungen"),
-					  ft.NavigationBarDestination(icon=ft.icons.MAP, label="Netzpläne")], selected_index=0,
-		on_change=route_changer)
+	# navigation for mobile
+	if page.platform == ft.PagePlatform.ANDROID or page.platform == ft.PagePlatform.IOS:
+		page.window.width = 400
+		page.navigation_bar = ft.NavigationBar(
+			destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
+						  ft.NavigationBarDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
+						  ft.NavigationBarDestination(icon=ft.icons.LIST, label="Meldungen"),
+						  ft.NavigationBarDestination(icon=ft.icons.MAP, label="Netzpläne")], selected_index=0,
+			on_change=route_changer)
+	else:
+		page.window.width = 1000
+		page.window.height = 600
+		# navigation for desktop (enabled in common.py MyPage class)
+		page.rail = ft.NavigationRail(
+			selected_index=0,
+			extended=True,
+			destinations=[
+				ft.NavigationRailDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
+				ft.NavigationRailDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
+				ft.NavigationRailDestination(icon=ft.icons.LIST, label="Meldungen"),
+				ft.NavigationRailDestination(icon=ft.icons.MAP, label="Netzpläne"),
+			],
+			on_change=route_changer
+		)
 
-	#set theme type
+
+	# set theme type
 	page.theme_mode = curSe["settings"].theme
 
 	# update page to present
+	page.add(mainContainer)
 	page.update()
-
 
 ft.app(main)
