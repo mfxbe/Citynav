@@ -7,6 +7,7 @@ pyodide_http.patch_all()
 # Import flet and systems libraries
 import flet as ft
 import json
+import os
 
 # Import other parts of this app
 import stopsdata  # contains also the static data (#FIXME provide static as json text file)
@@ -45,10 +46,13 @@ def main(page: ft.Page):
 
 	# basic
 	page.title = "Citynav München"
+	mainView = ft.View(padding=0)
+	page.views.append(mainView)
 
 	# set basic common data
 	curSe["stops"] = load_stops()  # load stop data
 	curSe["page"] = page
+	curSe["mainView"] = mainView
 	curSe["settings"] = StorageHandler(page)
 
 	# Some color fixes and preferences
@@ -62,18 +66,13 @@ def main(page: ft.Page):
 									 system_overlay_style=ft.SystemOverlayStyle(
 										 status_bar_brightness=ft.Brightness.DARK))
 
-	# setup pages
-	routingPage = RoutingPage.RoutingPage(curSe)
-	departurePage = DeparturePage.DeparturePage(curSe)
-	reportsPage = ReportsPage.ReportsPage(curSe)
-	mapsPage = MapsPage.MapsPage(curSe)
-	mainContainer = ft.Container(content=routingPage)
-	mainContainer.expand = True
-	page.padding = 0
-
 	# Add navigation to page
-	def route_changer(e):
-		index = e.control.selected_index
+	def view_changer(e):
+		if hasattr(e, "control"):
+			index = e.control.selected_index
+		else:
+			index = e
+
 		if index == 0:
 			nonlocal routingPage
 			if mainContainer.content == routingPage:
@@ -97,20 +96,22 @@ def main(page: ft.Page):
 
 		mainContainer.update()
 
-	# navigation for mobile
+	# setup navigations
 	if page.platform == ft.PagePlatform.ANDROID or page.platform == ft.PagePlatform.IOS:
 		page.window.width = 400
-		page.navigation_bar = ft.NavigationBar(
+		# navigation for mobile
+		mainView.navigation_bar = ft.NavigationBar(
 			destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
 						  ft.NavigationBarDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
 						  ft.NavigationBarDestination(icon=ft.icons.LIST, label="Meldungen"),
 						  ft.NavigationBarDestination(icon=ft.icons.MAP, label="Netzpläne")], selected_index=0,
-			on_change=route_changer)
+			on_change=view_changer)
+		nb = mainView.navigation_bar
 	else:
 		page.window.width = 1000
 		page.window.height = 600
-		# navigation for desktop (enabled in common.py MyPage class)
-		page.rail = ft.NavigationRail(
+		# navigation for desktop (enabled in common.py by MyPage class)
+		mainView.rail = ft.NavigationRail(
 			selected_index=0,
 			extended=True,
 			destinations=[
@@ -119,14 +120,48 @@ def main(page: ft.Page):
 				ft.NavigationRailDestination(icon=ft.icons.LIST, label="Meldungen"),
 				ft.NavigationRailDestination(icon=ft.icons.MAP, label="Netzpläne"),
 			],
-			on_change=route_changer
+			on_change=view_changer
 		)
+		nb = mainView.rail
+
+	# make android back button work
+	def on_pop_with_back(eventView):
+		nonlocal currentIndexTracker
+		currentIndex = nb.selected_index
+		if mainContainer.content.currentParent:
+			mainContainer.content.switch_sub(mainContainer.content.currentParent)
+			currentIndexTracker = -1
+		else:
+			if currentIndexTracker == -1:
+				currentIndexTracker = currentIndex
+				view_changer(currentIndex)
+			else:
+				if currentIndexTracker == 0:
+					page.views.pop()
+					os._exit(1)
+				else:
+					currentIndexTracker = 0
+					view_changer(0)
+					nb.selected_index = 0
+
+		page.update()
+	currentIndexTracker = -1
+	page.on_view_pop = on_pop_with_back
+
+	# setup pages
+	routingPage = RoutingPage.RoutingPage(curSe)
+	departurePage = DeparturePage.DeparturePage(curSe)
+	reportsPage = ReportsPage.ReportsPage(curSe)
+	mapsPage = MapsPage.MapsPage(curSe)
+	mainContainer = ft.Container(content=routingPage)
+	mainContainer.expand = True
+	page.padding = 0
 
 	# set theme type
 	page.theme_mode = curSe["settings"].theme
 
 	# update page to present
-	page.add(mainContainer)
+	mainView.controls = [mainContainer]
 	page.update()
 
 

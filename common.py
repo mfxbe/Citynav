@@ -10,6 +10,7 @@ class MyPage(ft.AnimatedSwitcher):
 		self.ct = None
 		self.header = header
 		self.curSe = curSe
+		self.currentParent = None
 
 	def switched(self):
 		pass
@@ -21,21 +22,21 @@ class MyPage(ft.AnimatedSwitcher):
 		self.page.update()
 
 	def switch_sub(self, title, notify=True):
-		if self.page.platform == ft.PagePlatform.ANDROID or self.page.platform == ft.PagePlatform.IOS:
-			c = self.pages[title]
-		else:
-			# handle display of navigation rail for desktop
-			c = ft.Row([self.page.rail, ft.VerticalDivider(width=1), self.pages[title]], expand=True, spacing=0)
-
-
 		self.ct = title
-		self.content = c
+		self.content = self.pages[title]
+		self.currentParent = self.pages[title].my_page_parent
 		self.navbar_helper(self.pages[title].my_page_parent)
 		if notify:
 			self.switched()
 
 	def add_sub(self, title, content, parent=None):
-		container = ft.Container(content, expand=True, padding=0, margin=0)
+		if self.curSe["page"].platform == ft.PagePlatform.ANDROID or self.curSe["page"].platform == ft.PagePlatform.IOS:
+			container = ft.Row([ft.Container(content, expand=True, padding=0, margin=0)], expand=True, spacing=0)
+		else:
+			# handle display of navigation rail for desktop
+			container = ft.Row([self.curSe["mainView"].rail, ft.VerticalDivider(width=1),
+								ft.Container(content, expand=True, padding=0, margin=0)], expand=True, spacing=0)
+
 		container.my_page_parent = parent
 		self.pages[title] = container
 		if self.ct is None: self.ct = title
@@ -50,13 +51,15 @@ class MyPage(ft.AnimatedSwitcher):
 				backButton = ft.IconButton(ft.icons.ARROW_BACK)
 				backButton.on_click = lambda e: self.switch_sub(parent)
 
-			self.page.appbar = ft.AppBar(
+			self.parent.parent.appbar = ft.AppBar(
+				automatically_imply_leading=False,
 				leading_width=lw,
 				leading=backButton,
 				title=ft.Text(self.header),
 				bgcolor="#36618e",
 				color="white",
-				actions=[ft.IconButton(ft.icons.MORE_VERT, on_click=lambda e, p=self.page: page_settings(p, self.curSe))]
+				actions=[
+					ft.IconButton(ft.icons.MORE_VERT, on_click=lambda e, p=self.page: page_settings(p, self.curSe))]
 			)
 
 			self.page.update()
