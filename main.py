@@ -23,14 +23,18 @@ curSe = {}
 def load_stops():
 	stopsResult = []
 	stopsData = json.loads(stopsdata.stops)
+	stop_names = set()
 
 	for s in stopsData:
-		if not any(stop["name"] == s["Name mit Ort"] for stop in stopsResult):
+		stop_name = s["Name mit Ort"]
+		if stop_name not in stop_names:  # Überprüfen, ob der Stopname bereits vorhanden ist
 			if s["Tarifzone TSR"] != "":
-				stop = dict()
-				stop["name"] = s["Name mit Ort"]
-				stop["id"] = s["Globale ID"]
+				stop = {
+					"name": stop_name,
+					"id": s["Globale ID"]
+				}
 				stopsResult.append(stop)
+				stop_names.add(stop_name)  # Stopname zum Set hinzufügen
 
 	return stopsResult
 
