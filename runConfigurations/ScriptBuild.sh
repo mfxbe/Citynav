@@ -12,7 +12,8 @@ cd build_tmp || exit
 
 if [ -z "$1" ] || [ "$1" == "linux" ]
 then
-  mkdir -p builds/linux
+  rm -rf ../builds/linux || true
+  mkdir -p ../builds/linux
   flet build linux --exclude "__pypackages__" -o work
   mv work/build_tmp work/de.mfxbe.Citynav
   makeself --nox11 work citynav-linux.run " and starting Citynav München ..." ./de.mfxbe.Citynav
@@ -22,19 +23,24 @@ fi
 
 if [ -z "$1" ] || [ "$1" == "web" ]
 then
-  mkdir -p builds/web
-  flet publish main.py -a assets --app-name "Citynav München" --base-url / --distpath work
+  rm -rf ../builds/web || true
+  mkdir -p ../builds/web
+  flet publish main.py -a assets --app-name "Citynav München" --base-url "/$2" --distpath work
   mv work/* ../builds/web
   rm ../builds/web/icons/*
   rm ../builds/web/favicon.png
   cp ../builds/web/icon.png ../builds/web/icons/icon.png
   cp ../builds/web/splash.png ../builds/web/icons/loading-animation.png
   cp ../builds/web/icon.png ../builds/web/favicon.png
+  cp ../web_manifest.json ../builds/web/manifest.json
+  sed -i -e 's/black/#36618e/g' ../builds/web/index.html
+  sed -i -e 's/apple-touch-icon-192/icon/g' ../builds/web/index.html
 fi
 
 if [ -z "$1" ] || [ "$1" == "android" ]
 then
-  mkdir -p builds/android
+  rm -rf ../builds/android || true
+  mkdir -p ../builds/android
   flet build apk --project Citynav --product "Citynav München" --org "de.mfxbe" --exclude "__pypackages__" -o work
   mv work/* ../builds/android
 fi

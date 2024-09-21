@@ -1,0 +1,18 @@
+{
+  "name": "Citynav München",
+  "short_name": "Citynav München",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#36618e",
+  "description": "Citynav München",
+  "orientation": "portrait",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}
