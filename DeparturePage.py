@@ -8,7 +8,7 @@ import flet as ft
 
 # Import other parts of this app
 import StationSearchBar
-from common import MyPage, color_allocator
+from common import MyPage, color_allocator, stop_pos_finder
 
 
 class DeparturePage(MyPage):
@@ -82,6 +82,13 @@ class DeparturePage(MyPage):
 			self.page.snack_bar.open = True
 			self.page.update()
 		else:
+			if len(departures) < 1:
+				self.switch_sub("startPage")
+				self.page.snack_bar = ft.SnackBar(ft.Text(f"Keine Abfahrten gefunden"))
+				self.page.snack_bar.open = True
+				self.page.update()
+				return
+
 			for d in departures:
 				timedelta = datetime.fromtimestamp(d["realtimeDepartureTime"] / 1000) - datetime.now()
 				timedeltaValue = round(timedelta.total_seconds() / 60)
@@ -95,12 +102,17 @@ class DeparturePage(MyPage):
 					cont = ft.Container(ft.Text(d["label"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
 										alignment=ft.alignment.center)
 
+
+
 				entry = ft.Row([
 					ft.Row([
 						cont,
 						ft.Text(d["destination"])
 					]),
-					ft.Text(str(timedeltaValue) + " Min")
+					ft.Row([
+						stop_pos_finder(d),
+						ft.Text(str(timedeltaValue) + " Min", width=45),
+					], spacing=15)
 				], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
 				listview.controls.append(entry)
 				listview.controls.append(ft.Divider())

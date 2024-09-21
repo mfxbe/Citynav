@@ -8,7 +8,7 @@ import flet as ft
 
 # Import other parts of this app
 import StationSearchBar
-from common import MyPage, color_allocator
+from common import MyPage, color_allocator, stop_pos_finder
 
 
 class RoutingPage(MyPage):
@@ -161,6 +161,13 @@ class RoutingPage(MyPage):
             curSe["page"].snack_bar.open = True
             curSe["page"].update()
         else:
+            if len(routes) < 1:
+                self.switch_sub("startRoutingPage")
+                self.page.snack_bar = ft.SnackBar(ft.Text(f"Keine Verbindungen gefunden"))
+                self.page.snack_bar.open = True
+                self.page.update()
+                return
+
             for r in routes:
                 rp = dict()
                 rp["starttime"] = datetime.strptime(r["parts"][0]["from"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
@@ -253,6 +260,7 @@ class RoutingPage(MyPage):
                                      margin=ft.margin.only(top=20)),
                         ft.Text(pData["fromStation"], size=15)
                     ], spacing=15),
+                    stop_pos_finder(p["from"]),
                    # ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
                 listview.controls.append(fromStationRow)
@@ -311,6 +319,7 @@ class RoutingPage(MyPage):
                         ]),
                         ft.Text(pData["toStation"], size=15),
                     ], spacing=15),
+                    ft.Column([stop_pos_finder(p["to"]), stop_pos_finder(rid["parts"][index + 1]["from"])]),
                     #ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
                 listview.controls.append(toStationRow)
@@ -324,6 +333,7 @@ class RoutingPage(MyPage):
                                      margin=ft.margin.only(bottom=20)),
                         ft.Text(pData["toStation"], size=15)
                     ], spacing=15),
+                    stop_pos_finder(p["to"]),
                     #ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5),  todo make this button work
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
                 listview.controls.append(toStationRow)
