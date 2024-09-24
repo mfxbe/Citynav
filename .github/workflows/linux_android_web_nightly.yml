@@ -1,4 +1,4 @@
-name: Linux Web Android Build
+name: Nightly Build (Linux, Web, Android)
 
 on:
   # Runs on push to any of the below branches
