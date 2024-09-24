@@ -1,4 +1,4 @@
-name: Linux Web Android Build
+name: Request Build (Linux, Web, Android)
 
 on:
   # Runs on pull request events that target one of the below branches
