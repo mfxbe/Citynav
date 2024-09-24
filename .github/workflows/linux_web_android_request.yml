@@ -1,4 +1,4 @@
-name: Android Build
+name: Linux Web Android Build
 
 on:
   # Runs on push to any of the below branches
@@ -48,24 +48,54 @@ jobs:
 
     - name: Patch for build
       run: |
-        flutter doctor
         sudo apt-get update -y
-        sudo apt-get install -y wget 
+        sudo apt-get install -y wget makeself poppler-utils
         flutter doctor
 
-    - name: Flet Build APK
+    - name: Flet Build Prepare
       run: |
         flutter config --no-analytics # disable flutter analytics
         chmod +x ./runConfigurations/ScriptPrepare.sh
         chmod +x ./runConfigurations/ScriptBuild.sh
         ./runConfigurations/ScriptPrepare.sh
+
+    - name: Flet Build Linux
+      run: |
+        ./runConfigurations/ScriptBuild.sh linux
+      shell: bash
+
+    - name: Flet Build Web
+      run: |
+        ./runConfigurations/ScriptBuild.sh web
+        zip web.zip ./builds/web/* -r
+        
+      shell: bash
+
+    - name: Flet Build Android
+      run: |
         ./runConfigurations/ScriptBuild.sh android
       shell: bash
+
+    - name: Upload Linux Artifact
+      uses: actions/upload-artifact@v4.3.4  # https://github.com/marketplace/actions/upload-a-build-artifact
+      with:
+        name: linux-build-artifact  # the name of the artifact
+        path: ./builds/linux/citynav-linux.run  # location of Flet build output
+        if-no-files-found: error  # Fail the action with an error message if no files are found
+        overwrite: false  # If true, an artifact with a matching name will be deleted before a new one is uploaded. If false, the action will fail if an artifact for the given name already exists. Does not fail if the artifact does not exist.
+
+    - name: Upload Web Artifact
+      uses: actions/upload-artifact@v4.3.4  # https://github.com/marketplace/actions/upload-a-build-artifact
+      with:
+        name: web-build-artifact  # the name of the artifact
+        path: web.zip  # location of Flet build output
+        if-no-files-found: error  # Fail the action with an error message if no files are found
+        overwrite: false
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4.3.4  # https://github.com/marketplace/actions/upload-a-build-artifact
       with:
         name: android-build-artifact  # the name of the artifact
-        path: /builds/android/app-release.apk  # location of Flet build output
+        path: ./builds/android/app-release.apk  # location of Flet build output
         if-no-files-found: error  # Fail the action with an error message if no files are found
-        overwrite: false  # If true, an artifact with a matching name will be deleted before a new one is uploaded. If false, the action will fail if an artifact for the given name already exists. Does not fail if the artifact does not exist.
+        overwrite: false
