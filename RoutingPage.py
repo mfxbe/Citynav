@@ -260,7 +260,7 @@ class RoutingPage(MyPage):
                                      margin=ft.margin.only(top=20)),
                         ft.Text(pData["fromStation"], size=15)
                     ], spacing=15),
-                    stop_pos_finder(p["from"]),
+                    stop_pos_finder(p["from"], curSe),
                    # ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
                 listview.controls.append(fromStationRow)
@@ -319,7 +319,7 @@ class RoutingPage(MyPage):
                         ]),
                         ft.Text(pData["toStation"], size=15),
                     ], spacing=15),
-                    ft.Column([stop_pos_finder(p["to"]), stop_pos_finder(rid["parts"][index + 1]["from"])]),
+                    ft.Column([stop_pos_finder(p["to"], curSe), stop_pos_finder(rid["parts"][index + 1]["from"], curSe)]),
                     #ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
                 listview.controls.append(toStationRow)
@@ -333,7 +333,7 @@ class RoutingPage(MyPage):
                                      margin=ft.margin.only(bottom=20)),
                         ft.Text(pData["toStation"], size=15)
                     ], spacing=15),
-                    stop_pos_finder(p["to"]),
+                    stop_pos_finder(p["to"], curSe),
                     #ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5),  todo make this button work
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
                 listview.controls.append(toStationRow)

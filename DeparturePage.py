@@ -114,8 +114,8 @@ class DeparturePage(MyPage):
 						ft.Text(d["destination"])
 					]),
 					ft.Row([
-						stop_pos_finder(d),
-						ft.Text(str(timedeltaValue) + " Min", width=45),
+						stop_pos_finder(d, curSe),
+						ft.Text(str(timedeltaValue) + " Min", width=55),
 					], spacing=15)
 				], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
 				listview.controls.append(entry)

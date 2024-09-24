@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # Import flet and systems libraries
 import flet as ft
+
 from settings import *
 
-def stop_pos_finder(d):
-	if "platform" in d:
+
+def stop_pos_finder(d, curSe):
+	if "platform" in d and curSe["settings"].stops_shown:
 		platformContainer = ft.Container(
 			ft.Text(d["platform"], text_align=ft.TextAlign.CENTER, size=8, color=ft.colors.ON_SECONDARY_CONTAINER),
 			alignment=ft.alignment.center,
@@ -12,18 +14,21 @@ def stop_pos_finder(d):
 			height=15,
 			bgcolor=ft.colors.SECONDARY_CONTAINER
 		)
-	elif "stopPositionNumber" in d:
+	elif "stopPositionNumber" in d and curSe["settings"].stops_shown:
 		platformContainer = ft.Container(
-			ft.Text(d["stopPositionNumber"], text_align=ft.TextAlign.CENTER, size=8, color=ft.colors.ON_SECONDARY_CONTAINER),
+			ft.Text(d["stopPositionNumber"], text_align=ft.TextAlign.CENTER, size=8,
+					color=ft.colors.ON_SECONDARY_CONTAINER),
 			alignment=ft.alignment.center,
 			width=8,
 			height=15,
 			bgcolor=ft.colors.SECONDARY_CONTAINER
 		)
 	else:
-		platformContainer = ft.Text(" ", size=8) #empty text field as placeholder if there is no platform
+		platformContainer = ft.Text(" ",
+									size=8)  # empty text field as placeholder if there is no platform or show is of
 
 	return platformContainer
+
 
 class MyPage(ft.AnimatedSwitcher):
 	def __init__(self, header, curSe):
@@ -127,6 +132,7 @@ class StorageHandler():
 			self.connection_history = self.set_from_storage("connection_history", list())
 			self.departures_history = self.set_from_storage("departures_history", list())
 			self.default = self.set_from_storage("default", 0)
+			self.stops_shown = self.set_from_storage("stops_shown", False)
 		except Exception as e:
 			print(e)
 
@@ -135,6 +141,7 @@ class StorageHandler():
 			self.connection_history = list()
 			self.departures_history = list()
 			self.default = 0
+			self.stops_shown = False
 
 			self.p.snack_bar = ft.SnackBar(ft.Text(f"Fehler beim Setzten von Nutzereinstellungen"))
 			self.p.snack_bar.open = True
