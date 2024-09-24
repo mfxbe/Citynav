@@ -1,10 +1,6 @@
 name: Linux Web Android Build
 
 on:
-  # Runs on push to any of the below branches
-  push:
-    branches:
-      - master
   # Runs on pull request events that target one of the below branches
   pull_request:
     branches:
