@@ -39,6 +39,7 @@ class ReportsPage(MyPage):
 			self.loaded = datetime.now()
 
 	async def load_reports(self):
+		# mvg
 		if self.curSe["page"].web:
 			proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
 			req = Request(
@@ -49,6 +50,7 @@ class ReportsPage(MyPage):
 		reports = json.loads(response.read())
 
 		con = dict()
+		p = 1
 
 		for r in reports:
 			lineColor = "red"
@@ -66,6 +68,7 @@ class ReportsPage(MyPage):
 			r["text"] = html.unescape(REM_HTAG.sub('', r["text"]))
 
 			ol = []
+
 			for rl in r["lines"]:
 				if r["text"] + rl["name"] not in ol:
 					ol.append(r["text"] + rl["name"])
@@ -75,7 +78,7 @@ class ReportsPage(MyPage):
 						contentColumn = con[rl["name"]]
 						contentColumn.controls.append(ft.Divider())
 						contentColumn.controls.append(ft.Text(
-							spans=[ft.TextSpan(r["title"], ft.TextStyle(size=15)), ft.TextSpan("\n" + r["text"])],
+							spans=[ft.TextSpan(r["title"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"])],
 							color=fontColor))
 					else:
 						img = ft.Container(ft.Text(rl["name"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
@@ -90,5 +93,53 @@ class ReportsPage(MyPage):
 												  can_tap_header=True)
 						self.listview.controls.append(entry)
 						con[rl["name"]] = contentColumn
+
+						if backColor == "#ffb800":
+							p = len(self.listview.controls)
+
+		# s-bahn (only current disruptions)
+		sBahnResponse = urlopen(
+			"https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell&filter=false&channel=REGIONAL&prop=REGIONAL&states=BY&authors=S_BAHN_MUC")
+		sBahnReports = json.loads(sBahnResponse.read())
+
+		for r in sBahnReports["disruptions"]:
+			r["text"] = r["text"].replace("<br/>", "\n")
+			r["text"] = r["text"].replace("<br>", "\n")
+			r["text"] = r["text"].replace("<li>", "\n\t• ")
+			r["text"] = html.unescape(REM_HTAG.sub('', r["text"]))
+
+			for l in r["lines"]:
+				if l["property"] == "SBAHN":
+					if l["name"] in con:
+						contentColumn = con[l["name"]]
+						contentColumn.controls.append(ft.Divider())
+						contentColumn.controls.append(ft.Text(
+							spans=[ft.TextSpan(r["summary"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"] + " (Ursache: " + r["cause"]["label"] + ")")],
+							color="black"))
+					else:
+						lineColor = color_allocator(l["name"].replace(" ", ""))
+
+						img = ft.Container(ft.Text(l["name"].replace(" ", ""), color=ft.colors.WHITE),
+										   bgcolor=lineColor, width=35,
+										   alignment=ft.alignment.center)
+						img.margin = ft.margin.only(left=10)
+						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
+						contentColumn.controls.append(ft.Text(r["text"] + " Ursache: " + r["cause"]["label"] + ")", color="black"))
+						entry = ft.ExpansionPanel(header=ft.Row([img, ft.Container(ft.ListTile(
+							title=ft.Text(r["summary"], color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
+							expand=True)]),
+												  content=ft.Container(contentColumn, padding=5,
+																	   alignment=ft.alignment.center_left),
+												  bgcolor="#ffb800",
+												  can_tap_header=True)
+						self.listview.controls.insert(p, entry)
+						p = p + 1
+
+						con[l["name"]] = contentColumn
+				else:
+					cL = l
+					cL["property"] = "SBAHN"
+					cL["name"] = "S " + r["headline"][2]
+					r["lines"].append(cL)
 
 		self.switch_sub("list")
