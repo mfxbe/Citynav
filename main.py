@@ -152,6 +152,7 @@ def main(page: ft.Page):
 	routingPage = RoutingPage.RoutingPage(curSe)
 	departurePage = DeparturePage.DeparturePage(curSe)
 	reportsPage = ReportsPage.ReportsPage(curSe)
+	page.run_task(reportsPage.load_reports)
 	mapsPage = MapsPage.MapsPage(curSe)
 	mainContainer = ft.Container(content=routingPage)
 	mainContainer.expand = True

@@ -237,8 +237,11 @@ class RoutingPage(MyPage):
         listContainer.controls.append(mColumn)
         mStack = ft.Stack(expand=True)
         mColumn.controls.append(mStack)
-        listview = ft.ListView(padding=10, expand=True, spacing=0)
+        listview = ft.ListView(expand=True, spacing=0)
         mStack.controls.append(listview)
+
+        ePL = ft.ExpansionPanelList(expand=True, elevation=0)
+        listview.controls.append(ePL)
 
         rid = curSe["jsonData"]
         for index, p in enumerate(rid["parts"]):
@@ -249,6 +252,11 @@ class RoutingPage(MyPage):
             pData["lineDestination"] = p["line"]["destination"]
             pData["toStation"] = p["to"]["name"]
             pData["toTime"] = datetime.strptime(p["to"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
+
+            if pData["line"] in self.curSe["rps"]:
+                msg = self.curSe["rps"][pData["line"]]
+                ePL.controls.insert(1, msg)
+                # todo do not show added not "current" info
 
             if index == 0:
                 fromStationBorder = ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"])),
@@ -263,7 +271,7 @@ class RoutingPage(MyPage):
                     stop_pos_finder(p["from"], curSe),
                    # ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
-                listview.controls.append(fromStationRow)
+                listview.controls.append(ft.Container(fromStationRow, padding=ft.padding.symmetric(horizontal=10)))
 
             betweenStopsList = []
             for stop in p["intermediateStops"]:
@@ -297,7 +305,7 @@ class RoutingPage(MyPage):
                 ft.Container(betweenStationTile, expand=True,
                              border=ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"]))))
             ], spacing=15, expand=True)
-            listview.controls.append(betweenStationRow)
+            listview.controls.append(ft.Container(betweenStationRow, padding=ft.padding.symmetric(horizontal=10)))
 
             if index != len(rid["parts"]) - 1:
                 toStationBorderTop = ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"])),
@@ -322,7 +330,7 @@ class RoutingPage(MyPage):
                     ft.Column([stop_pos_finder(p["to"], curSe), stop_pos_finder(rid["parts"][index + 1]["from"], curSe)]),
                     #ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
-                listview.controls.append(toStationRow)
+                listview.controls.append(ft.Container(toStationRow, padding=ft.padding.symmetric(horizontal=10)))
             else:
                 toStationBorder = ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"])),
                                                  bottom=ft.border.BorderSide(4, color_allocator(pData["line"])))
@@ -336,7 +344,7 @@ class RoutingPage(MyPage):
                     stop_pos_finder(p["to"], curSe),
                     #ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5),  todo make this button work
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
-                listview.controls.append(toStationRow)
+                listview.controls.append(ft.Container(toStationRow, padding=ft.padding.symmetric(horizontal=10)))
 
         listview.controls.append(ft.Divider(thickness=1))
         listview.controls.append(

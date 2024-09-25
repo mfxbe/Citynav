@@ -20,6 +20,7 @@ class ReportsPage(MyPage):
 		super().__init__("Meldungen", curSe)
 		self.curSe = curSe
 		self.loaded = None
+		self.curSe["rps"] = dict()
 
 		listview = ft.ExpansionPanelList(expand=True, elevation=0)
 		listview.expand = True
@@ -95,6 +96,7 @@ class ReportsPage(MyPage):
 						con[rl["name"]] = contentColumn
 
 						if backColor == "#ffb800":
+							self.curSe["rps"][rl["name"]] = entry
 							p = len(self.listview.controls)
 
 		# s-bahn (only current disruptions)
@@ -136,6 +138,7 @@ class ReportsPage(MyPage):
 						p = p + 1
 
 						con[l["name"]] = contentColumn
+						self.curSe["rps"][l["name"]] = entry
 				else:
 					cL = l
 					cL["property"] = "SBAHN"
