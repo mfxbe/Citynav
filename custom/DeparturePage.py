@@ -7,7 +7,7 @@ from urllib.request import urlopen
 import flet as ft
 
 # Import other parts of this app
-from pages import StationSearchBar
+from custom import StationSearchBar
 from common import MyPage, color_allocator, stop_pos_finder
 
 
