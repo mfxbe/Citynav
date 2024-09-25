@@ -11,10 +11,7 @@ import os
 
 # Import other parts of this app
 import stopsdata  # contains also the static data (#FIXME provide static as json text file)
-import DeparturePage
-import ReportsPage
-import MapsPage
-import RoutingPage
+from custom import DeparturePage, MapsPage, ReportsPage, RoutingPage
 from common import StorageHandler
 
 curSe = {}
@@ -148,7 +145,7 @@ def main(page: ft.Page):
 	currentIndexTracker = -1
 	page.on_view_pop = on_pop_with_back
 
-	# setup pages
+	# setup custom
 	routingPage = RoutingPage.RoutingPage(curSe)
 	departurePage = DeparturePage.DeparturePage(curSe)
 	reportsPage = ReportsPage.ReportsPage(curSe)
