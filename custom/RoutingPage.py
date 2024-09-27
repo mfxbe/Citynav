@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Import flet and systems libraries
+import copy
 import json
 from datetime import datetime
 from urllib.request import urlopen
@@ -255,8 +256,14 @@ class RoutingPage(MyPage):
 
             if pData["line"] in self.curSe["rps"]:
                 msg = self.curSe["rps"][pData["line"]]
-                ePL.controls.insert(1, msg)
-                # todo do not show added not "current" info
+                msgCopy = copy.deepcopy(msg)
+
+                # remove non disruption-type messages
+                newC = [elm for elm in msgCopy.content.content.controls if hasattr(elm, "myIsCurrent")]
+                msgCopy.content.content.controls = newC
+                msgCopy.content.content.controls.append(ft.Container(expand=True))
+
+                ePL.controls.insert(1, msgCopy)
 
             if index == 0:
                 fromStationBorder = ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"])),

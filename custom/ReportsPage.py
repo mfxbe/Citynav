@@ -80,7 +80,7 @@ class ReportsPage(MyPage):
 					if rl["name"] in con:
 						contentColumn = con[rl["name"]]
 						contentColumn.controls.append(ft.Divider())
-						contentColumn.controls.append(ft.Text(
+						text = ft.Text(
 							spans=[ft.TextSpan(r["title"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"])],
 							color=fontColor, expand=True)
 						contentColumn.controls.append(text)
@@ -89,7 +89,8 @@ class ReportsPage(MyPage):
 										   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
 						contentColumn = ft.Column()
-						contentColumn.controls.append(ft.Text(r["text"], color=fontColor))
+						text = ft.Text(r["text"], color=fontColor, expand=True)
+						contentColumn.controls.append(text)
 						entry = ft.ExpansionPanel(header=ft.Row([img, ft.Container(ft.ListTile(
 							title=ft.Text(r["title"], color=fontColor, theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
 							expand=True)]),
@@ -98,7 +99,8 @@ class ReportsPage(MyPage):
 						self.listview.controls.append(entry)
 						con[rl["name"]] = contentColumn
 
-						if backColor == "#ffb800":
+						if r["type"] == "DISRUPTION":
+							text.myIsCurrent = True
 							self.curSe["rps"][rl["name"]] = entry
 							p = len(self.listview.controls)
 
