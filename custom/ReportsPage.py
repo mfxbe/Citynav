@@ -33,11 +33,13 @@ class ReportsPage(MyPage):
 		self.expand = True
 
 	def did_mount(self):
+		self.switch_sub("start")
 		if self.loaded is None or (datetime.now() - self.loaded).total_seconds() > 300:
-			self.switch_sub("start")
 			self.update()
 			self.page.run_task(self.load_reports)
 			self.loaded = datetime.now()
+		else:
+			self.switch_sub("list")
 
 	async def load_reports(self):
 		# mvg
@@ -80,7 +82,8 @@ class ReportsPage(MyPage):
 						contentColumn.controls.append(ft.Divider())
 						contentColumn.controls.append(ft.Text(
 							spans=[ft.TextSpan(r["title"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"])],
-							color=fontColor))
+							color=fontColor, expand=True)
+						contentColumn.controls.append(text)
 					else:
 						img = ft.Container(ft.Text(rl["name"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
 										   alignment=ft.alignment.center)
@@ -100,8 +103,13 @@ class ReportsPage(MyPage):
 							p = len(self.listview.controls)
 
 		# s-bahn (only current disruptions)
-		sBahnResponse = urlopen(
-			"https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell&filter=false&channel=REGIONAL&prop=REGIONAL&states=BY&authors=S_BAHN_MUC")
+		if self.curSe["page"].web:
+			proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
+			sReq = Request(
+				proxy + "https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell%26filter=false%26channel=REGIONAL%26prop=REGIONAL%26states=BY%26authors=S_BAHN_MUC")  # FIXME find a better way around the cors limits
+		else:
+			sReq = Request("https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell&filter=false&channel=REGIONAL&prop=REGIONAL&states=BY&authors=S_BAHN_MUC")
+		sBahnResponse = urlopen(sReq)
 		sBahnReports = json.loads(sBahnResponse.read())
 
 		for r in sBahnReports["disruptions"]:
@@ -111,6 +119,8 @@ class ReportsPage(MyPage):
 			r["text"] = html.unescape(REM_HTAG.sub('', r["text"]))
 
 			for l in r["lines"]:
+				l["name"] = l["name"].replace(" ", "")
+
 				if l["property"] == "SBAHN":
 					if l["name"] in con:
 						contentColumn = con[l["name"]]
@@ -119,16 +129,16 @@ class ReportsPage(MyPage):
 							spans=[ft.TextSpan(r["summary"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"] + " (Ursache: " + r["cause"]["label"] + ")")],
 							color="black"))
 					else:
-						lineColor = color_allocator(l["name"].replace(" ", ""))
+						lineColor = color_allocator(l["name"])
 
-						img = ft.Container(ft.Text(l["name"].replace(" ", ""), color=ft.colors.WHITE),
+						img = ft.Container(ft.Text(l["name"], color=ft.colors.WHITE),
 										   bgcolor=lineColor, width=35,
 										   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
 						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
 						contentColumn.controls.append(ft.Text(r["text"] + " (Ursache: " + r["cause"]["label"] + ")", color="black"))
 						entry = ft.ExpansionPanel(header=ft.Row([img, ft.Container(ft.ListTile(
-							title=ft.Text(r["summary"], color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
+							title=ft.Text(r["summary"].replace("\n", ""), color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
 							expand=True)]),
 												  content=ft.Container(contentColumn, padding=5,
 																	   alignment=ft.alignment.center_left),
