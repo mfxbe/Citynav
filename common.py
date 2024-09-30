@@ -125,42 +125,65 @@ class StorageHandler():
 		self.p = page
 		self.prefix = "de.mfxbe.Citynav."
 
+		# defaults if everything in set_up fails
+		self.theme = "auto"
+		self.results = 1
+		self.connection_history = list()
+		self.departures_history = list()
+		self.default = 0
+		self.stops_shown = False
+
+	async def set_up(self):
 		# Set defaults
+
 		try:
-			self.theme = self.set_from_storage("theme", "auto")
-			self.results = self.set_from_storage("results", 1)
-			self.connection_history = self.set_from_storage("connection_history", list())
-			self.departures_history = self.set_from_storage("departures_history", list())
-			self.default = self.set_from_storage("default", 0)
-			self.stops_shown = self.set_from_storage("stops_shown", False)
+			self.theme = await self.set_from_storage("theme", "auto")
+			self.results = await self.set_from_storage("results", 1)
+			self.connection_history = await self.set_from_storage("connection_history", list())
+			self.departures_history = await self.set_from_storage("departures_history", list())
+			self.default = await self.set_from_storage("default", 0)
+			self.stops_shown = await self.set_from_storage("stops_shown", False)
 		except Exception as e:
 			print(e)
-
-			self.theme = "auto"
-			self.results = 1
-			self.connection_history = list()
-			self.departures_history = list()
-			self.default = 0
-			self.stops_shown = False
-
 			self.p.snack_bar = ft.SnackBar(ft.Text(f"Fehler beim Setzten von Nutzereinstellungen"))
 			self.p.snack_bar.open = True
 			self.p.update()
 
 	def set_key(self, key, value):
-		self.p.client_storage.set(self.prefix + key, value)
+		# this fails with a timeout error on web but does indeed work despite that
+		# see also set_from_storage and https://github.com/flet-dev/flet/issues/3783
+		try:
+			self.p.client_storage.set(self.prefix + key, value)
+		except:
+			pass
 		setattr(self, key, value)
 
 	def get_key(self, key):
 		value = self.p.client_storage.get(self.prefix + key)
 		return value
 
-	def set_from_storage(self, key, default):
+	async def set_from_storage(self, key, default):
 		result = default
 
-		if self.p.client_storage.contains_key(self.prefix + key) or self.p.client_storage.get(
-				self.prefix + key) is not None:
-			result = self.p.client_storage.get(self.prefix + key)
+		#here a trick is needed because the "correct" way of loading the data from storage doesnt work in web
+		token = await self.p._invoke_method_async(
+			method_name="clientStorage:get",
+			arguments={"key": self.prefix + key},
+			wait_timeout=10,
+			wait_for_result=True,
+		)
+		if token is not None:
+			result = await self.p._invoke_method_async(  # noqa: WPS437
+				method_name="clientStorage:get",
+				arguments={"key": self.prefix + key},
+				wait_timeout=10,
+				wait_for_result=True,
+			)
+
+		#this is the code that should work but doesn't see: https://github.com/flet-dev/flet/issues/3783
+		##if self.p.client_storage.contains_key(self.prefix + key) or self.p.client_storage.get(
+		##		self.prefix + key) is not None:
+		##	result = self.p.client_storage.get(self.prefix + key)
 
 		return result
 

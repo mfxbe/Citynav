@@ -36,9 +36,8 @@ def load_stops():
 
 	return stopsResult
 
-
 # Main function for app startup
-def main(page: ft.Page):
+async def main(page: ft.Page):
 	global curSe
 
 	# basic
@@ -51,6 +50,8 @@ def main(page: ft.Page):
 	curSe["page"] = page
 	curSe["mainView"] = mainView
 	curSe["settings"] = StorageHandler(page)
+
+	await curSe["settings"].set_up()
 
 	# Some color fixes and preferences
 	# page.theme_mode = ft.ThemeMode.DARK

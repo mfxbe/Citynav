@@ -26,7 +26,7 @@ def page_settings(page, curSe):
 		else:
 			value = "dark"
 		curSe["settings"].set_key("theme", value)
-		curSe["page"].theme_mode = curSe["settings"].get_key("theme")  # set theme according to new setting
+		curSe["page"].theme_mode = curSe["settings"].theme  # set theme according to new setting
 		curSe["page"].update()
 
 	colorDropdown = ft.Dropdown(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[
