@@ -36,19 +36,21 @@ class MapsPage(MyPage):
 		self.add_map_item("Verkehrslinien Region", "U-Bahn, S-Bahn, Regio, Bus", "ma")
 
 		# Page structure of mapsViewPage
-		def on_pan_update(e: ft.DragUpdateEvent):
-			e.control.top = e.control.top + e.delta_y
-			e.control.left = e.control.left + e.delta_x
-			e.control.update()
+		#def on_pan_update(e: ft.DragUpdateEvent):
+		#	e.control.top = e.control.top + e.delta_y
+		#	e.control.left = e.control.left + e.delta_x
+		#	e.control.update()
 
-		self.mapController = ft.GestureDetector(
-			mouse_cursor=ft.MouseCursor.MOVE,
-			on_pan_update=on_pan_update,
-			drag_interval=10,
-			left=-550,
-			top=-400,
-			content=ft.Text(""),
-		)
+		#self.mapController = ft.GestureDetector(
+		#	mouse_cursor=ft.MouseCursor.MOVE,
+		#	on_pan_update=on_pan_update,
+		#	drag_interval=10,
+		#	left=-550,
+		#	top=-400,
+		#	content=ft.Text(""),
+		#)
+		self.mapController = ft.InteractiveViewer(content=ft.Text(""), boundary_margin=ft.margin.all(50), min_scale=0.5, max_scale=10)
+
 		s = ft.Stack([
 			ft.Container(ft.ProgressRing(width=14, height=14, color=ft.colors.PRIMARY, stroke_width=2),
 						 alignment=ft.alignment.center, left=0, right=0, top=0, bottom=0),
@@ -58,13 +60,12 @@ class MapsPage(MyPage):
 
 	def add_map_item(self, title, description, imageName):
 		def on_click_action():
-			print("Action")
 			self.curSe["map"] = imageName
 			self.mapController.content = ft.Image("maps/" + self.curSe["map"] + ".jpeg", width=1500)
-			self.mapController.left=-550
-			self.mapController.top=-400
+			#self.mapController.left=-550
+			#self.mapController.top=-400
 			self.switch_sub("mapsViewPage")
-			self.mapController.update()
+			self.mapController.parent.update()
 
 		item = ft.Stack([
 			ft.Image(src=f"mi-placeholder.png", fit=ft.ImageFit.COVER, border_radius=ft.border_radius.all(10)),
