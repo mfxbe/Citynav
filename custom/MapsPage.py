@@ -49,7 +49,7 @@ class MapsPage(MyPage):
 		#	top=-400,
 		#	content=ft.Text(""),
 		#)
-		self.mapController = ft.InteractiveViewer(content=ft.Text(""), boundary_margin=ft.margin.all(50), min_scale=0.5, max_scale=10)
+		self.mapController = ft.InteractiveViewer(content=ft.Text(""), boundary_margin=ft.margin.all(50), min_scale=0.5, max_scale=10, constrained=False)
 
 		s = ft.Stack([
 			ft.Container(ft.ProgressRing(width=14, height=14, color=ft.colors.PRIMARY, stroke_width=2),
