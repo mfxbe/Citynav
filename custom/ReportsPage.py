@@ -42,6 +42,9 @@ class ReportsPage(MyPage):
 			self.switch_sub("list")
 
 	async def load_reports(self):
+		#clear
+		self.listview.controls.clear()
+
 		# mvg
 		if self.curSe["page"].web:
 			proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
@@ -154,7 +157,7 @@ class ReportsPage(MyPage):
 				else:
 					cL = l
 					cL["property"] = "SBAHN"
-					cL["name"] = "S " + r["headline"][2]
+					cL["name"] = "S" + r["headline"][2]
 					r["lines"].append(cL)
 
 		self.switch_sub("list")
