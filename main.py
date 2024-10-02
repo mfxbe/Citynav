@@ -44,6 +44,7 @@ async def main(page: ft.Page):
 	page.title = "Citynav München"
 	mainView = ft.View(padding=0)
 	page.views.append(mainView)
+	page.urt_running = False
 
 	# set basic common data
 	curSe["stops"] = load_stops()  # load stop data

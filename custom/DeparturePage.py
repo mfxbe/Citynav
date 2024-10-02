@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # Import flet and systems libraries
+import asyncio
 import json
+import time
 from datetime import datetime
 from urllib.request import urlopen
 
@@ -55,6 +57,35 @@ class DeparturePage(MyPage):
 		self.detailsPage = ft.Column(expand=True)
 		self.add_sub("detailsPage", ft.Container(self.detailsPage, padding=0, expand=True), "startPage")
 
+	def did_mount(self):
+		super().did_mount()
+		self.page.urt_running = False
+
+	async def update_results_time(self, listview):
+		self.page.urt_running = True
+		while self.ct == "detailsPage":
+
+			try: #use this here to stop an error appearing when this gets canceled wehen the apps is closed by the user
+				await asyncio.sleep(10)
+			except: pass
+			#print("Tests")
+
+			for index, e in enumerate(listview.controls):
+				if listview.page is None: break
+				if hasattr(e, "timeText"):
+					timedelta = datetime.fromtimestamp(e.timeText.raw_data) - datetime.now()
+					timedeltaValue = round(timedelta.total_seconds() / 60)
+					if timedeltaValue >= 0:
+						e.timeText.value = str(timedeltaValue) + " Min"
+					else:
+						e.visible = False
+						listview.controls[index + 1].visible = False
+
+			if listview.page is not None:
+				listview.update()
+				if not self.page.urt_running: break
+
+
 	def display_result_page(self):
 		curSe = self.curSe
 		listview = ft.ListView(padding=10)
@@ -108,6 +139,8 @@ class DeparturePage(MyPage):
 					cont = ft.Container(ft.Text(d["label"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
 										alignment=ft.alignment.center)
 
+				timeText = ft.Text(str(timedeltaValue) + " Min", width=55)
+				timeText.raw_data = d["realtimeDepartureTime"] / 1000
 				entry = ft.Row([
 					ft.Row([
 						cont,
@@ -115,13 +148,16 @@ class DeparturePage(MyPage):
 					]),
 					ft.Row([
 						stop_pos_finder(d, curSe),
-						ft.Text(str(timedeltaValue) + " Min", width=55),
+						timeText,
 					], spacing=15)
 				], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+				entry.timeText = timeText
+
 				listview.controls.append(entry)
 				listview.controls.append(ft.Divider())
 
 		self.switch_sub("detailsPage")
+		self.page.run_task(self.update_results_time, listview)
 		self.update()
 
 	def switched(self):
