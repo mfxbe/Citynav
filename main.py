@@ -36,6 +36,7 @@ def load_stops():
 
 	return stopsResult
 
+
 # Main function for app startup
 async def main(page: ft.Page):
 	global curSe
@@ -44,7 +45,8 @@ async def main(page: ft.Page):
 	page.title = "Citynav München"
 	mainView = ft.View(padding=0)
 	page.views.append(mainView)
-	page.urt_running = False
+	page.udt_running = False # for async process to update times in departure
+	page.urt_running = False # for async process to update times in routing
 
 	# set basic common data
 	curSe["stops"] = load_stops()  # load stop data
@@ -58,12 +60,14 @@ async def main(page: ft.Page):
 	# page.theme_mode = ft.ThemeMode.DARK
 	page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary=ft.colors.BACKGROUND),
 						  search_bar_theme=ft.SearchBarTheme(elevation=1),
-						  system_overlay_style=ft.SystemOverlayStyle(status_bar_brightness=ft.Brightness.DARK))
+						  system_overlay_style=ft.SystemOverlayStyle(status_bar_brightness=ft.Brightness.DARK,
+																	 status_bar_icon_brightness=ft.Brightness.LIGHT))
 	page.dark_theme = ft.theme.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
 									 text_theme=ft.TextTheme(
 										 title_medium=ft.TextStyle(weight=ft.FontWeight.NORMAL, color="white")),
 									 system_overlay_style=ft.SystemOverlayStyle(
-										 status_bar_brightness=ft.Brightness.DARK))
+										 status_bar_brightness=ft.Brightness.DARK,
+										 status_bar_icon_brightness=ft.Brightness.LIGHT))
 
 	# Add navigation to page
 	def view_changer(e):
@@ -144,6 +148,7 @@ async def main(page: ft.Page):
 					nb.selected_index = 0
 
 		page.update()
+
 	currentIndexTracker = -1
 	page.on_view_pop = on_pop_with_back
 
