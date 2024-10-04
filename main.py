@@ -8,6 +8,7 @@ pyodide_http.patch_all()
 import flet as ft
 import json
 import os
+from locales import _
 
 # Import other parts of this app
 import stopsdata  # contains also the static data (#FIXME provide static as json text file)
@@ -15,7 +16,6 @@ from custom import DeparturePage, MapsPage, ReportsPage, RoutingPage
 from common import StorageHandler
 
 curSe = {}
-
 
 # Load the information about stops
 def load_stops():
@@ -104,7 +104,7 @@ async def main(page: ft.Page):
 		page.window.width = 400
 		# navigation for mobile
 		mainView.navigation_bar = ft.NavigationBar(
-			destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
+			destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label=_("Connections")),
 						  ft.NavigationBarDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
 						  ft.NavigationBarDestination(icon=ft.icons.LIST, label="Meldungen"),
 						  ft.NavigationBarDestination(icon=ft.icons.MAP, label="Netzpläne")], selected_index=0,
@@ -118,7 +118,7 @@ async def main(page: ft.Page):
 			selected_index=0,
 			extended=True,
 			destinations=[
-				ft.NavigationRailDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
+				ft.NavigationRailDestination(icon=ft.icons.ROUTE, label=_("Connections")),
 				ft.NavigationRailDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
 				ft.NavigationRailDestination(icon=ft.icons.LIST, label="Meldungen"),
 				ft.NavigationRailDestination(icon=ft.icons.MAP, label="Netzpläne"),

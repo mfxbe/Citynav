@@ -9,6 +9,7 @@ from urllib.request import urlopen
 import flet as ft
 
 # Import other parts of this app
+from locales import _
 from custom import StationSearchBar
 from common import MyPage, color_allocator, stop_pos_finder
 
@@ -16,7 +17,7 @@ from common import MyPage, color_allocator, stop_pos_finder
 class RoutingPage(MyPage):
     def __init__(self, curSe):
         # basics
-        super().__init__("Verbindungen", curSe)
+        super().__init__(_("Connections"), curSe)
         self.curSe = curSe
         curSe["jsonData"] = None
         curSe["time"] = ""
@@ -25,15 +26,15 @@ class RoutingPage(MyPage):
         startRoutingPage = ft.Column()
         self.add_sub("startRoutingPage", ft.Container(startRoutingPage, padding=10))
 
-        fromSearchBar = StationSearchBar.StationSearchBar(hint="Von", stations=curSe["stops"])
+        fromSearchBar = StationSearchBar.StationSearchBar(hint=_("From"), stations=curSe["stops"])
         startRoutingPage.controls.append(ft.Container(fromSearchBar, alignment=ft.alignment.center))
 
-        toSearchBar = StationSearchBar.StationSearchBar(hint="Nach", stations=curSe["stops"])
+        toSearchBar = StationSearchBar.StationSearchBar(hint=_("To"), stations=curSe["stops"])
         startRoutingPage.controls.append(ft.Container(toSearchBar, alignment=ft.alignment.center))
 
         moreRow = ft.Row(vertical_alignment=ft.alignment.center)
         startRoutingPage.controls.append(moreRow)
-        timeButtonText = ft.Text("Jetzt", weight=ft.FontWeight.BOLD)
+        timeButtonText = ft.Text(_("Now"), weight=ft.FontWeight.BOLD)
         timeButton = ft.TextButton(
             content=ft.Row([ft.Icon(ft.icons.ACCESS_TIME), timeButtonText], alignment=ft.MainAxisAlignment.CENTER),
             expand=True)
@@ -41,12 +42,12 @@ class RoutingPage(MyPage):
         switchButton = ft.TextButton(icon=ft.icons.SWAP_VERT, expand=True)
         moreRow.controls.append(switchButton)
 
-        goButton = ft.FilledButton(text="Verbindungen anzeigen", expand=True, style=ft.ButtonStyle(color="white"))
+        goButton = ft.FilledButton(text=_("Search connections"), expand=True, style=ft.ButtonStyle(color="white"))
         self.goButton = goButton
         startRoutingPage.controls.append(ft.Row(controls=[goButton]))
 
         startRoutingPage.controls.append(ft.Row())
-        historyHeader = ft.Text("Verlauf", weight=ft.FontWeight.BOLD)
+        historyHeader = ft.Text(_("History"), weight=ft.FontWeight.BOLD)
         startRoutingPage.controls.append(ft.Row(controls=[historyHeader]))
 
         container2 = ft.Container(expand=True)
@@ -80,10 +81,10 @@ class RoutingPage(MyPage):
 
         def choose_time(_e):
             timePicker = ft.CupertinoDatePicker(date_picker_mode=ft.CupertinoDatePickerMode.TIME, use_24h_format=True)
-            timeDialog = ft.AlertDialog(title=ft.Text("Abfahrtszeit wählen"),
+            timeDialog = ft.AlertDialog(title=ft.Text(_("Choose departure time")),
                                         content=ft.Container(timePicker, height=150), actions=[
-                    ft.TextButton("Abbrechen", on_click=lambda d: curSe["page"].close(timeDialog)),
-                    ft.TextButton("Bestätigen", on_click=lambda d: choose_time_ok(timePicker.value, timeDialog))
+                    ft.TextButton(_("Cancel"), on_click=lambda d: curSe["page"].close(timeDialog)),
+                    ft.TextButton(_("Confirm"), on_click=lambda d: choose_time_ok(timePicker.value, timeDialog))
                 ])
             curSe["page"].open(timeDialog)
 
@@ -106,7 +107,7 @@ class RoutingPage(MyPage):
                 self.curSe["jsonData"] = None
                 self.display_list_page()
             else:
-                curSe["page"].snack_bar = ft.SnackBar(ft.Text(f"Unbekannte Haltestelle"))
+                curSe["page"].snack_bar = ft.SnackBar(ft.Text(_("Unknown stop")))
                 curSe["page"].snack_bar.open = True
                 curSe["page"].update()
 
@@ -132,10 +133,10 @@ class RoutingPage(MyPage):
                 if hasattr(e, "timeText"):
                     timedeltaValue = round((e.timeText.raw_data - datetime.now()).total_seconds() / 60)
                     if timedeltaValue >= 0:
-                        e.timeText.value = "in " + str(timedeltaValue) + " Min."
+                        e.timeText.value = "in " + str(timedeltaValue) + _(" min.")
                     else:
                         timedeltaValue = timedeltaValue * -1
-                        e.timeText.value = "vor " + str(timedeltaValue) + " Min."
+                        e.timeText.value = "vor " + str(timedeltaValue) + _(" min.")
 
             if listview.page is not None:
                 listview.update()
@@ -188,13 +189,13 @@ class RoutingPage(MyPage):
         except Exception as e:
             print(e)
             self.switch_sub("startRoutingPage")
-            curSe["page"].snack_bar = ft.SnackBar(ft.Text(f"Fehler beim Datenabruf"))
+            curSe["page"].snack_bar = ft.SnackBar(ft.Text(_("Error retrieving data.")))
             curSe["page"].snack_bar.open = True
             curSe["page"].update()
         else:
             if len(routes) < 1:
                 self.switch_sub("startRoutingPage")
-                self.page.snack_bar = ft.SnackBar(ft.Text(f"Keine Verbindungen gefunden"))
+                self.page.snack_bar = ft.SnackBar(ft.Text(_("No connections found.")))
                 self.page.snack_bar.open = True
                 self.page.update()
                 return
@@ -225,7 +226,7 @@ class RoutingPage(MyPage):
                                             width=35, alignment=ft.alignment.center)
                         partLables.controls.append(cont)
 
-                timeText = ft.Text("in " + str(rp["timedeltaValue"]) + " Min.", weight=ft.FontWeight.BOLD,
+                timeText = ft.Text("in " + str(rp["timedeltaValue"]) + _(" min."), weight=ft.FontWeight.BOLD,
                                    color=ft.colors.PRIMARY)
                 timeText.raw_data = rp["starttime"]
                 entry = ft.Row([
@@ -237,7 +238,7 @@ class RoutingPage(MyPage):
                     ], spacing=15),
                     ft.Row([
                         ft.Column([timeText,
-                                   ft.Text("Dauer: " + str(rp["traveltimedeltaValue"]) + " Min.", size=12)], spacing=2,
+                                   ft.Text(_("Duration: ") + str(rp["traveltimedeltaValue"]) + _(" min."), size=12)], spacing=2,
                                   horizontal_alignment=ft.CrossAxisAlignment.END),
                         ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)
                     ], spacing=5),
@@ -322,12 +323,12 @@ class RoutingPage(MyPage):
                 betweenStopsList.append(infoText)
 
             if len(betweenStopsList) < 1:
-                betweenStopsList.append(ft.Text("Keine Zwischenhalte.", size=12))
+                betweenStopsList.append(ft.Text(_("No stops in between."), size=12))
 
             betweenStopsList.append(ft.Text(" ", size=1))
 
             if pData["line"] == "Fussweg":
-                kmLabel = ft.Text(str(int(p["distance"])) + " Meter")
+                kmLabel = ft.Text(str(int(p["distance"])) + _(" Meter"))
                 betweenStationLabel = ft.Row([ft.Container(
                     ft.Icon(ft.icons.DIRECTIONS_WALK, color=ft.colors.INVERSE_SURFACE, size=15), width=35), kmLabel])
             else:
@@ -390,11 +391,11 @@ class RoutingPage(MyPage):
 
         listview.controls.append(ft.Divider(thickness=1))
         listview.controls.append(
-            ft.Text("Dauer: " + curSe["duration"] + " Min.", size=12, expand=True, text_align=ft.TextAlign.CENTER))
+            ft.Text(_("Duration: ") + curSe["duration"] + _(" min."), size=12, expand=True, text_align=ft.TextAlign.CENTER))
         self.update()
 
     def switched(self):
         # Reset the loading button when returning to startPage
         if self.goButton.page is not None:
-            self.goButton.content = ft.Text("Verbindungen anzeigen")
+            self.goButton.content = ft.Text(_("Search connections"))
             self.goButton.update()
