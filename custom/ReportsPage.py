@@ -130,9 +130,10 @@ class ReportsPage(MyPage):
 					if l["name"] in con:
 						contentColumn = con[l["name"]]
 						contentColumn.controls.append(ft.Divider())
-						contentColumn.controls.append(ft.Text(
-							spans=[ft.TextSpan(r["summary"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"] + " (Ursache: " + r["cause"]["label"] + ")")],
-							color="black"))
+						text = ft.Text(
+							spans=[ft.TextSpan(r["summary"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"])],
+							color="black")
+						contentColumn.controls.append(text)
 					else:
 						lineColor = color_allocator(l["name"])
 
@@ -141,7 +142,8 @@ class ReportsPage(MyPage):
 										   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
 						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
-						contentColumn.controls.append(ft.Text(r["text"] + " (Ursache: " + r["cause"]["label"] + ")", color="black"))
+						text = ft.Text(r["text"], color="black")
+						contentColumn.controls.append(text)
 						entry = ft.ExpansionPanel(header=ft.Row([img, ft.Container(ft.ListTile(
 							title=ft.Text(r["summary"].replace("\n", ""), color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
 							expand=True)]),
@@ -154,6 +156,8 @@ class ReportsPage(MyPage):
 
 						con[l["name"]] = contentColumn
 						self.curSe["rps"][l["name"]] = entry
+
+					text.myIsCurrent = True
 				else:
 					cL = l
 					cL["property"] = "SBAHN"
