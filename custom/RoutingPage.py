@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Import flet and systems libraries
+import asyncio
 import copy
 import json
 from datetime import datetime
@@ -113,6 +114,35 @@ class RoutingPage(MyPage):
         switchButton.on_click = switch_destinations
         goButton.on_click = do_action
 
+    def did_mount(self):
+        super().did_mount()
+        self.page.udt_running = False
+
+    async def update_results_time(self, listview):
+        self.page.udt_running = True
+        while self.ct == "listPage" or self.ct == "resultPage":
+
+            try: #use this here to stop an error appearing when this gets canceled wehen the apps is closed by the user
+                await asyncio.sleep(10)
+            except: pass
+            print("check d")
+
+            for index, e in enumerate(listview.controls):
+                if listview.page is None: break
+                if hasattr(e, "timeText"):
+                    timedeltaValue = round((e.timeText.raw_data - datetime.now()).total_seconds() / 60)
+                    if timedeltaValue >= 0:
+                        e.timeText.value = "in " + str(timedeltaValue) + " Min."
+                    else:
+                        timedeltaValue = timedeltaValue * -1
+                        e.timeText.value = "vor " + str(timedeltaValue) + " Min."
+
+            if listview.page is not None:
+                listview.update()
+                if not self.page.udt_running: break
+
+
+
     def display_list_page(self):
         curSe = self.curSe
         listContainer = ft.Column(expand=True, spacing=0)
@@ -195,6 +225,9 @@ class RoutingPage(MyPage):
                                             width=35, alignment=ft.alignment.center)
                         partLables.controls.append(cont)
 
+                timeText = ft.Text("in " + str(rp["timedeltaValue"]) + " Min.", weight=ft.FontWeight.BOLD,
+                                   color=ft.colors.PRIMARY)
+                timeText.raw_data = rp["starttime"]
                 entry = ft.Row([
                     ft.Row([
                         ft.Column([ft.Text(" " + rp["starttime"].strftime("%H:%M")),
@@ -203,8 +236,7 @@ class RoutingPage(MyPage):
                         partLables
                     ], spacing=15),
                     ft.Row([
-                        ft.Column([ft.Text("in " + str(rp["timedeltaValue"]) + " Min.", weight=ft.FontWeight.BOLD,
-                                           color=ft.colors.PRIMARY),
+                        ft.Column([timeText,
                                    ft.Text("Dauer: " + str(rp["traveltimedeltaValue"]) + " Min.", size=12)], spacing=2,
                                   horizontal_alignment=ft.CrossAxisAlignment.END),
                         ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)
@@ -214,10 +246,13 @@ class RoutingPage(MyPage):
                                               padding=ft.padding.only(left=10, right=10, top=7, bottom=7), ink=True,
                                               on_click=lambda f, d=r, t=str(rp["traveltimedeltaValue"]),: animate(f, d,
                                                                                                                   t))
+                entryContainer.timeText = timeText
+
                 listview.controls.append(entryContainer)
                 listview.controls.append(ft.Divider(thickness=1, height=1))
 
         self.switch_sub("listPage")
+        self.page.run_task(self.update_results_time, listview)
 
     def display_result_page(self):
         curSe = self.curSe
