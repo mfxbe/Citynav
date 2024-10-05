@@ -8,7 +8,7 @@ pyodide_http.patch_all()
 import flet as ft
 import json
 import os
-from locales import _
+from locales import _, set_up_locales
 
 # Import other parts of this app
 import stopsdata  # contains also the static data (#FIXME provide static as json text file)
@@ -40,6 +40,8 @@ def load_stops():
 # Main function for app startup
 async def main(page: ft.Page):
 	global curSe
+
+	set_up_locales(page)
 
 	# basic
 	page.title = "Citynav München"

@@ -6,6 +6,7 @@ source .venv/bin/activate
 mkdir -p build_tmp/work
 
 cp *.py build_tmp/
+cp -r locales_data build_tmp/locales_data
 cp -r custom build_tmp/custom
 cp requirements.txt build_tmp/
 cp -r assets build_tmp
@@ -36,6 +37,12 @@ then
   cp ../web_manifest.json ../builds/web/manifest.json
   sed -i -e 's/black/#36618e/g' ../builds/web/index.html
   sed -i -e 's/apple-touch-icon-192/icon/g' ../builds/web/index.html
+  sed -i -e 's/apple-touch-icon-192/icon/g' ../builds/web/index.html
+  sed -i '0,/<script>/s/<script>/&\
+    var userLang = navigator.language || navigator.userLanguage; \
+    var queryParams = new URLSearchParams(window.location.search); \
+    queryParams.set("lang", userLang); \
+    history.replaceState(null, null, "?"+queryParams.toString());/' ../builds/web/index.html
 fi
 
 if [ -z "$1" ] || [ "$1" == "android" ]
