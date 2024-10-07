@@ -3,6 +3,8 @@ import locale
 import importlib
 from urllib.parse import urlparse, parse_qs
 
+import flet as ft
+
 myl10n = lambda: None
 myl10n.data = dict()
 
@@ -20,6 +22,10 @@ def _(string):
 def set_up_locales(page):
 	global myl10n
 	l = None
+
+	# there is no way on Android to get the current system language, use "de" because its most likely the correct one
+	if page.platform == ft.PagePlatform.ANDROID:
+		l = "de"
 
 	#try:
 	#	l = parse_qs(urlparse(page.url).query)["lang"][0]
