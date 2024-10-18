@@ -178,7 +178,7 @@ class RoutingPage(MyPage):
 
         try:
             if curSe["jsonData"] is None:
-                response = urlopen("https://www.mvg.de/api/fib/v2/connection?numberOfConnections=" + str(
+                response = urlopen("https://www.mvg.de/api/bgw-pt/v3/routes?numberOfConnections=" + str(
                     resultLimit) + "&originStationGlobalId=" + curSe["positionID"] + "&destinationStationGlobalId=" +
                                    curSe["position2ID"] + curSe["time"])
                 routes = json.loads(response.read())

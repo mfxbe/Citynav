@@ -110,7 +110,7 @@ class DeparturePage(MyPage):
 
 		try:
 			response = urlopen(
-				"https://www.mvg.de/api/fib/v2/departure?limit=" + str(resultLimit) + "&offsetInMinutes=0&globalId=" +
+				"https://www.mvg.de/api/bgw-pt/v3/departures?limit=" + str(resultLimit) + "&offsetInMinutes=0&globalId=" +
 				curSe[
 					"positionID"])
 			departures = json.loads(response.read())
