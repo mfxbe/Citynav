@@ -45,8 +45,8 @@ async def main(page: ft.Page):
 	page.title = "Citynav München"
 	mainView = ft.View(padding=0)
 	page.views.append(mainView)
-	page.udt_running = False # for async process to update times in departure
-	page.urt_running = False # for async process to update times in routing
+	page.udt_running = False  # for async process to update times in departure
+	page.urt_running = False  # for async process to update times in routing
 
 	# set basic common data
 	curSe["stops"] = load_stops()  # load stop data
@@ -58,10 +58,9 @@ async def main(page: ft.Page):
 
 	# Some color fixes and preferences
 	# page.theme_mode = ft.ThemeMode.DARK
-	page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary=ft.colors.BACKGROUND),
-						  search_bar_theme=ft.SearchBarTheme(elevation=1),
-						  system_overlay_style=ft.SystemOverlayStyle(status_bar_brightness=ft.Brightness.DARK,
-																	 status_bar_icon_brightness=ft.Brightness.LIGHT))
+	page.theme = ft.theme.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary=ft.colors.BACKGROUND),
+						  search_bar_theme=ft.SearchBarTheme(elevation=1)
+						  )
 	page.dark_theme = ft.theme.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
 									 text_theme=ft.TextTheme(
 										 title_medium=ft.TextStyle(weight=ft.FontWeight.NORMAL, color="white")),

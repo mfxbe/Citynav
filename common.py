@@ -131,6 +131,7 @@ class StorageHandler():
 		self.connection_history = list()
 		self.departures_history = list()
 		self.default = 0
+		self.language = "de"
 		self.stops_shown = False
 
 	async def set_up(self):

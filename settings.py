@@ -17,6 +17,27 @@ def page_settings(page, curSe):
 
 	settingsView.controls.append(ft.Text("Einstellungen", theme_style=ft.TextThemeStyle.TITLE_MEDIUM))
 
+	# language
+	# def dropdown_changed(e):
+	# 	if e.control.value == "Automatisch":
+	# 		value = "auto"
+	# 	elif e.control.value == "Hell":
+	# 		value = "light"
+	# 	else:
+	# 		value = "dark"
+	# 	curSe["settings"].set_key("theme", value)
+	# 	curSe["page"].theme_mode = curSe["settings"].theme  # set theme according to new setting
+	# 	curSe["page"].update()
+
+	languageDropdown = ft.Dropdown(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[
+		ft.dropdown.Option("Deutsch"),
+		ft.dropdown.Option("English")
+	], value="Deutsch")
+	settingsView.controls.append(
+		ft.Row([ft.Text("Sprache"), languageDropdown], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
+	# colorDropdown.on_change = dropdown_changed
+
+
 	# colors
 	def dropdown_changed(e):
 		if e.control.value == "Automatisch":
