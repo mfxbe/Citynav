@@ -17,6 +17,7 @@ from common import StorageHandler
 
 curSe = {}
 
+
 # Load the information about stops
 def load_stops():
 	stopsResult = []
@@ -41,28 +42,27 @@ def load_stops():
 async def main(page: ft.Page):
 	global curSe
 
-	curSe["settings"] = StorageHandler(page)
-	set_up_locales(page, curSe)
-
 	# basic
 	page.title = "Citynav München"
 	mainView = ft.View(padding=0)
 	page.views.append(mainView)
-	page.udt_running = False  # for async process to update times in departure
-	page.urt_running = False  # for async process to update times in routing
+	page.udt_running = False # for async process to update times in departure
+	page.urt_running = False # for async process to update times in routing
 
 	# set basic common data
 	curSe["stops"] = load_stops()  # load stop data
 	curSe["page"] = page
 	curSe["mainView"] = mainView
+	curSe["settings"] = StorageHandler(page)
 
 	await curSe["settings"].set_up()
 
 	# Some color fixes and preferences
 	# page.theme_mode = ft.ThemeMode.DARK
-	page.theme = ft.theme.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary=ft.colors.BACKGROUND),
-						  search_bar_theme=ft.SearchBarTheme(elevation=1)
-						  )
+	page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary=ft.colors.BACKGROUND),
+						  search_bar_theme=ft.SearchBarTheme(elevation=1),
+						  system_overlay_style=ft.SystemOverlayStyle(status_bar_brightness=ft.Brightness.DARK,
+																	 status_bar_icon_brightness=ft.Brightness.LIGHT))
 	page.dark_theme = ft.theme.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
 									 text_theme=ft.TextTheme(
 										 title_medium=ft.TextStyle(weight=ft.FontWeight.NORMAL, color="white")),
@@ -105,7 +105,7 @@ async def main(page: ft.Page):
 		page.window.width = 400
 		# navigation for mobile
 		mainView.navigation_bar = ft.NavigationBar(
-			destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label=_("Connections")),
+			destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
 						  ft.NavigationBarDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
 						  ft.NavigationBarDestination(icon=ft.icons.LIST, label="Meldungen"),
 						  ft.NavigationBarDestination(icon=ft.icons.MAP, label="Netzpläne")], selected_index=0,
@@ -119,7 +119,7 @@ async def main(page: ft.Page):
 			selected_index=0,
 			extended=True,
 			destinations=[
-				ft.NavigationRailDestination(icon=ft.icons.ROUTE, label=_("Connections")),
+				ft.NavigationRailDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
 				ft.NavigationRailDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
 				ft.NavigationRailDestination(icon=ft.icons.LIST, label="Meldungen"),
 				ft.NavigationRailDestination(icon=ft.icons.MAP, label="Netzpläne"),
