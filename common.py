@@ -131,7 +131,7 @@ class StorageHandler():
 		self.connection_history = list()
 		self.departures_history = list()
 		self.default = 0
-		self.language = "de"
+		self.language = "unset"
 		self.stops_shown = False
 
 	async def set_up(self):
@@ -143,6 +143,7 @@ class StorageHandler():
 			self.connection_history = await self.set_from_storage("connection_history", list())
 			self.departures_history = await self.set_from_storage("departures_history", list())
 			self.default = await self.set_from_storage("default", 0)
+			self.language = await self.set_from_storage("language", "unset")
 			self.stops_shown = await self.set_from_storage("stops_shown", False)
 		except Exception as e:
 			print(e)

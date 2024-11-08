@@ -19,7 +19,7 @@ def _(string):
 	else:
 		return string
 
-def set_up_locales(page):
+def set_up_locales(page, curSe):
 	global myl10n
 	l = None
 
@@ -27,10 +27,7 @@ def set_up_locales(page):
 	if page.platform == ft.PagePlatform.ANDROID:
 		l = "de"
 
-	#try:
-	#	l = parse_qs(urlparse(page.url).query)["lang"][0]
-	#except:
-	#	l = None
+	print(curSe["settings"].language)
 
 	try:
 		if l is None:

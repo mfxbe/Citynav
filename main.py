@@ -41,7 +41,8 @@ def load_stops():
 async def main(page: ft.Page):
 	global curSe
 
-	set_up_locales(page)
+	curSe["settings"] = StorageHandler(page)
+	set_up_locales(page, curSe)
 
 	# basic
 	page.title = "Citynav München"
@@ -54,7 +55,6 @@ async def main(page: ft.Page):
 	curSe["stops"] = load_stops()  # load stop data
 	curSe["page"] = page
 	curSe["mainView"] = mainView
-	curSe["settings"] = StorageHandler(page)
 
 	await curSe["settings"].set_up()
 
