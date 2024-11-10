@@ -9,6 +9,7 @@ from urllib.request import urlopen, Request
 import flet as ft
 
 # Import other parts of this app
+from locales import _
 from common import MyPage, color_allocator
 
 REM_HTAG = re.compile(r'<[^>]+>')
@@ -17,7 +18,7 @@ REM_HTAG = re.compile(r'<[^>]+>')
 class ReportsPage(MyPage):
 	def __init__(self, curSe):
 		# basics
-		super().__init__("Meldungen", curSe)
+		super().__init__(_("Disruptions"), curSe)
 		self.curSe = curSe
 		self.loaded = None
 		self.curSe["rps"] = dict()

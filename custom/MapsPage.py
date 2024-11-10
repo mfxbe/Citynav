@@ -4,13 +4,14 @@
 import flet as ft
 
 # Import other parts of this app
+from locales import _
 from common import MyPage
 
 
 class MapsPage(MyPage):
 	def __init__(self, curSe):
 		# basics
-		super().__init__("Netzpläne", curSe)
+		super().__init__(_("Maps"), curSe)
 		self.curSe = curSe
 		curSe["map"] = ""
 
@@ -29,11 +30,11 @@ class MapsPage(MyPage):
 		self.add_sub("mapsOverviewPage", ft.Container(mapsOverviewPage, padding=10))
 
 		# add entries
-		self.add_map_item("Netzplan Stadt", "U-Bahn, S-Bahn, Tram, Regio", "lc")
-		self.add_map_item("Netzplan Region", "U-Bahn, S-Bahn, Regio", "la")
-		self.add_map_item("Nachtlinien Stadt", "Tram, S-Bahn, Bus", "nc")
-		self.add_map_item("Verkehrslinien Stadt", "U-Bahn, S-Bahn, Tram, Bus, Regio", "mc")
-		self.add_map_item("Verkehrslinien Region", "U-Bahn, S-Bahn, Regio, Bus", "ma")
+		self.add_map_item(_("Network map city"), _("Subway, Suburban, Tram, Regional"), "lc")
+		self.add_map_item(_("Network map region"), _("Subway, Suburban, Regional"), "la")
+		self.add_map_item(_("Night lines city"), _("Tram, Suburban, Bus"), "nc")
+		self.add_map_item(_("Transport routes city"), _("Subway, Suburban, Tram, Bus, Regional"), "mc")
+		self.add_map_item(_("Transport routes region"), _("Subway, Suburban, Regional, Bus"), "ma")
 
 		# Page structure of mapsViewPage
 		#def on_pan_update(e: ft.DragUpdateEvent):

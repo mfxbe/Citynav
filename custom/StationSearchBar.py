@@ -3,6 +3,8 @@
 import flet as ft
 from difflib import SequenceMatcher
 
+from locales import _
+
 class StationSearchBar(ft.SearchBar):
 	def __init__(self, hint, stations):
 		super().__init__()
@@ -15,7 +17,7 @@ class StationSearchBar(ft.SearchBar):
 		self.stations = stations
 		self.bar_bgcolor = ft.colors.ON_TERTIARY
 		self.bar_trailing = [searchPositionButton]
-		self.view_hint_text = "Haltestelle"
+		self.view_hint_text = _("Haltestelle")
 		self.bar_hint_text = hint
 		self.controls = [self.lv]
 		self.on_tap = lambda e: self.open_view()

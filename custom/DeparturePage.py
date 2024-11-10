@@ -9,6 +9,7 @@ from urllib.request import urlopen
 import flet as ft
 
 # Import other parts of this app
+from locales import _
 from custom import StationSearchBar
 from common import MyPage, color_allocator, stop_pos_finder
 
@@ -16,19 +17,19 @@ from common import MyPage, color_allocator, stop_pos_finder
 class DeparturePage(MyPage):
 	def __init__(self, curSe):
 		# basics
-		super().__init__("Abfahrten", curSe)
+		super().__init__(_("Departures"), curSe)
 		self.curSe = curSe
 
 		# Page structure of startPage
 		startPage = ft.Column()
-		positionSearchBar = StationSearchBar.StationSearchBar(hint="Haltestelle", stations=curSe["stops"])
+		positionSearchBar = StationSearchBar.StationSearchBar(hint=_("Stop"), stations=curSe["stops"])
 		startPage.controls.append(ft.Container(positionSearchBar, alignment=ft.alignment.center))
-		goButton = ft.FilledButton(text="Abfahrten anzeigen", expand=True,
+		goButton = ft.FilledButton(text=_("Search departures"), expand=True,
 								   style=ft.ButtonStyle(bgcolor="#36618e", color="white"))
 		self.goButton = goButton
 		startPage.controls.append(ft.Row(controls=[goButton]))
 		startPage.controls.append(ft.Row())
-		historyHeader = ft.Text("Verlauf", weight=ft.FontWeight.BOLD)
+		historyHeader = ft.Text(_("History"), weight=ft.FontWeight.BOLD)
 		startPage.controls.append(ft.Row(controls=[historyHeader]))
 
 		self.add_sub("startPage", ft.Container(startPage, padding=10))
@@ -47,7 +48,7 @@ class DeparturePage(MyPage):
 				self.goButton.update()
 				self.display_result_page()
 			else:
-				curSe["page"].snack_bar = ft.SnackBar(ft.Text("Unbekannte Haltestelle"))
+				curSe["page"].snack_bar = ft.SnackBar(ft.Text(_("Unknown stop")))
 				curSe["page"].snack_bar.open = True
 				curSe["page"].update()
 
@@ -116,13 +117,13 @@ class DeparturePage(MyPage):
 			departures = json.loads(response.read())
 		except:
 			self.switch_sub("startPage")
-			self.page.snack_bar = ft.SnackBar(ft.Text(f"Fehler beim Datenabruf"))
+			self.page.snack_bar = ft.SnackBar(ft.Text(_("Error retrieving data.")))
 			self.page.snack_bar.open = True
 			self.page.update()
 		else:
 			if len(departures) < 1:
 				self.switch_sub("startPage")
-				self.page.snack_bar = ft.SnackBar(ft.Text(f"Keine Abfahrten gefunden"))
+				self.page.snack_bar = ft.SnackBar(ft.Text(_("No departures found.")))
 				self.page.snack_bar.open = True
 				self.page.update()
 				return
@@ -140,7 +141,7 @@ class DeparturePage(MyPage):
 					cont = ft.Container(ft.Text(d["label"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
 										alignment=ft.alignment.center)
 
-				timeText = ft.Text(str(timedeltaValue) + " Min", width=55)
+				timeText = ft.Text(str(timedeltaValue) + _(" min."), width=55)
 				timeText.raw_data = d["realtimeDepartureTime"] / 1000
 				entry = ft.Row([
 					ft.Row([
@@ -164,5 +165,5 @@ class DeparturePage(MyPage):
 	def switched(self):
 		# Reset the loading button when returning to startPage
 		if self.goButton.page is not None:
-			self.goButton.content = ft.Text("Abfahrten anzeigen")
+			self.goButton.content = ft.Text(_("Search departures"))
 			self.goButton.update()

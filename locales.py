@@ -27,7 +27,8 @@ def set_up_locales(page, curSe):
 	if page.platform == ft.PagePlatform.ANDROID:
 		l = "de"
 
-	print(curSe["settings"].language)
+	if curSe["settings"].language is not "unset":
+		l = curSe["settings"].language
 
 	try:
 		if l is None:

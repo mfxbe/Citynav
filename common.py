@@ -182,6 +182,7 @@ class StorageHandler():
 				wait_for_result=True,
 			)
 			result = result.replace("\"", "")
+			result = result.replace("\\", "")
 
 		#this is the code that should work but doesn't see: https://github.com/flet-dev/flet/issues/3783
 		##if self.p.client_storage.contains_key(self.prefix + key) or self.p.client_storage.get(

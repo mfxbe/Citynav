@@ -56,6 +56,7 @@ async def main(page: ft.Page):
 	curSe["settings"] = StorageHandler(page)
 
 	await curSe["settings"].set_up()
+	set_up_locales(page, curSe)
 
 	# Some color fixes and preferences
 	# page.theme_mode = ft.ThemeMode.DARK
@@ -105,10 +106,10 @@ async def main(page: ft.Page):
 		page.window.width = 400
 		# navigation for mobile
 		mainView.navigation_bar = ft.NavigationBar(
-			destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
-						  ft.NavigationBarDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
-						  ft.NavigationBarDestination(icon=ft.icons.LIST, label="Meldungen"),
-						  ft.NavigationBarDestination(icon=ft.icons.MAP, label="Netzpläne")], selected_index=0,
+			destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label=_("Connections")),
+						  ft.NavigationBarDestination(icon=ft.icons.NEAR_ME, label=_("Departures")),
+						  ft.NavigationBarDestination(icon=ft.icons.LIST, label=_("Disruptions")),
+						  ft.NavigationBarDestination(icon=ft.icons.MAP, label=_("Maps"))], selected_index=0,
 			on_change=view_changer)
 		nb = mainView.navigation_bar
 	else:
@@ -119,10 +120,10 @@ async def main(page: ft.Page):
 			selected_index=0,
 			extended=True,
 			destinations=[
-				ft.NavigationRailDestination(icon=ft.icons.ROUTE, label="Verbindungen"),
-				ft.NavigationRailDestination(icon=ft.icons.NEAR_ME, label="Abfahrten"),
-				ft.NavigationRailDestination(icon=ft.icons.LIST, label="Meldungen"),
-				ft.NavigationRailDestination(icon=ft.icons.MAP, label="Netzpläne"),
+				ft.NavigationRailDestination(icon=ft.icons.ROUTE, label=_("Connections")),
+				ft.NavigationRailDestination(icon=ft.icons.NEAR_ME, label=_("Departures")),
+				ft.NavigationRailDestination(icon=ft.icons.LIST, label=_("Disruptions")),
+				ft.NavigationRailDestination(icon=ft.icons.MAP, label=_("Maps")),
 			],
 			on_change=view_changer
 		)
