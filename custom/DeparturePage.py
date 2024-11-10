@@ -131,6 +131,7 @@ class DeparturePage(MyPage):
 			for d in departures:
 				timedelta = datetime.fromtimestamp(d["realtimeDepartureTime"] / 1000) - datetime.now()
 				timedeltaValue = round(timedelta.total_seconds() / 60)
+				delayTime = d["delayInMinutes"]
 				if timedeltaValue < 0: continue
 
 				lineColor = color_allocator(d["label"])
@@ -143,6 +144,10 @@ class DeparturePage(MyPage):
 
 				timeText = ft.Text(str(timedeltaValue) + _(" min."), width=55)
 				timeText.raw_data = d["realtimeDepartureTime"] / 1000
+
+				if delayTime > 0:
+					timeText.color = ft.colors.RED
+
 				entry = ft.Row([
 					ft.Row([
 						cont,

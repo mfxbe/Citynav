@@ -3,7 +3,7 @@
 import asyncio
 import copy
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.request import urlopen
 
 import flet as ft
@@ -203,10 +203,20 @@ class RoutingPage(MyPage):
             for r in routes:
                 rp = dict()
                 rp["starttime"] = datetime.strptime(r["parts"][0]["from"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
+                if "departureDelayInMinutes" in r["parts"][0]["from"]:
+                    rp["starttimeDelay"] = r["parts"][0]["from"]["departureDelayInMinutes"]
+                    rp["starttime"] = rp["starttime"] + timedelta(minutes=rp["starttimeDelay"])
+                else:
+                    rp["starttimeDelay"] = 0
                 rp["endtime"] = datetime.strptime(r["parts"][-1]["to"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
+                if "arrivalDelayInMinutes" in r["parts"][-1]["to"]:
+                    rp["endtimeDelay"] = r["parts"][-1]["to"]["arrivalDelayInMinutes"]
+                    rp["endtime"] = rp["endtime"] + timedelta(minutes=rp["endtimeDelay"])
+                else:
+                    rp["endtimeDelay"] = 0 #var curently not used
                 rp["id"] = r["uniqueId"]
                 rp["timedeltaValue"] = round((rp["starttime"] - datetime.now()).total_seconds() / 60)
-                rp["traveltimedeltaValue"] = round((rp["endtime"] - rp["starttime"]).total_seconds() / 60)
+                rp["traveltimedeltaValue"] = round((rp["endtime"] - rp["starttime"]).total_seconds() / 60) + rp["starttimeDelay"]
 
                 if rp["timedeltaValue"] < 0: continue
 
@@ -228,6 +238,8 @@ class RoutingPage(MyPage):
 
                 timeText = ft.Text("in " + str(rp["timedeltaValue"]) + _(" min."), weight=ft.FontWeight.BOLD,
                                    color=ft.colors.PRIMARY)
+                if rp["starttimeDelay"] > 0:
+                    timeText.color = ft.colors.RED
                 timeText.raw_data = rp["starttime"]
                 entry = ft.Row([
                     ft.Row([
@@ -280,15 +292,25 @@ class RoutingPage(MyPage):
         ePL = ft.ExpansionPanelList(expand=True, elevation=0)
         listview.controls.append(ePL)
 
+        spaceAfterTime = 45
+
         rid = curSe["jsonData"]
         for index, p in enumerate(rid["parts"]):
             pData = dict()
             pData["fromStation"] = p["from"]["name"]
             pData["fromTime"] = datetime.strptime(p["from"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
+            if "departureDelayInMinutes" in p["from"]:
+                pData["fromTimeDelay"] = p["from"]["departureDelayInMinutes"]
+            else:
+                pData["fromTimeDelay"] = 0
             pData["line"] = p["line"]["label"]
             pData["lineDestination"] = p["line"]["destination"]
             pData["toStation"] = p["to"]["name"]
             pData["toTime"] = datetime.strptime(p["to"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
+            if "arrivalDelayInMinutes" in p["to"]:
+                pData["toTimeDelay"] = p["to"]["arrivalDelayInMinutes"]
+            else:
+                pData["toTimeDelay"] = 0
 
             if pData["line"] in self.curSe["rps"]:
                 msg = self.curSe["rps"][pData["line"]]
@@ -301,12 +323,24 @@ class RoutingPage(MyPage):
 
                 ePL.controls.insert(1, msgCopy)
 
+            if pData["fromTimeDelay"] > 0:
+                delayHint = " (+" + str(pData["fromTimeDelay"]) + ")"
+                spaceAfterTime = 70
+            else:
+                delayHint = ""
+
+            if pData["toTimeDelay"] > 0:
+                delayHintTo = " (+" + str(pData["toTimeDelay"]) + ")"
+                spaceAfterTime = 70
+            else:
+                delayHintTo = ""
+
             if index == 0:
                 fromStationBorder = ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"])),
                                                    top=ft.border.BorderSide(4, color_allocator(pData["line"])))
                 fromStationRow = ft.Row([
                     ft.Row([
-                        ft.Text(pData["fromTime"].strftime("%H:%M"), width=45),
+                        ft.Text(pData["fromTime"].strftime("%H:%M") + delayHint, width=spaceAfterTime),
                         ft.Container(width=10, height=25, border=fromStationBorder, padding=ft.padding.all(0),
                                      margin=ft.margin.only(top=20)),
                         ft.Text(pData["fromStation"], size=15)
@@ -318,8 +352,12 @@ class RoutingPage(MyPage):
 
             betweenStopsList = []
             for stop in p["intermediateStops"]:
+                if "departureDelayInMinutes" in stop and stop["departureDelayInMinutes"] > 0:
+                    delayHint = " (+" + str(stop["departureDelayInMinutes"]) + ")"
+                else:
+                    delayHint = "     "
                 betweenStopTime = datetime.strptime(stop["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
-                infoText = ft.Text(betweenStopTime.strftime("%H:%M") + "     " + stop["name"], size=12)
+                infoText = ft.Text(betweenStopTime.strftime("%H:%M") + delayHint + "     " + stop["name"], size=12)
                 betweenStopsList.append(infoText)
 
             if len(betweenStopsList) < 1:
@@ -344,7 +382,7 @@ class RoutingPage(MyPage):
                 collapsed_icon_color=ft.colors.with_opacity(0.0, ft.colors.PRIMARY)
             )
             betweenStationRow = ft.Row([
-                ft.Text("", width=45),
+                ft.Text("", width=spaceAfterTime),
                 ft.Container(betweenStationTile, expand=True,
                              border=ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"]))))
             ], spacing=15, expand=True)
@@ -358,11 +396,18 @@ class RoutingPage(MyPage):
                     top=ft.border.BorderSide(4, color_allocator(rid["parts"][index + 1]["line"]["label"])))
                 nextStationTime = datetime.strptime(rid["parts"][index + 1]["from"]["plannedDeparture"][:-6],
                                                     "%Y-%m-%dT%H:%M:%S")
+
+                if "departureDelayInMinutes" in rid["parts"][index + 1]["from"] and rid["parts"][index + 1]["from"]["departureDelayInMinutes"] > 0:
+                    delayHintNext = " (+" + str(rid["parts"][index + 1]["from"]["departureDelayInMinutes"]) + ")"
+                    spaceAfterTime = 70
+                else:
+                    delayHintNext = "     "
+
                 toStationRow = ft.Row([
                     ft.Row([
                         ft.Column([
-                            ft.Text(pData["toTime"].strftime("%H:%M"), width=45),
-                            ft.Text(nextStationTime.strftime("%H:%M"), width=45)
+                            ft.Text(pData["toTime"].strftime("%H:%M") + delayHint, width=spaceAfterTime),
+                            ft.Text(nextStationTime.strftime("%H:%M") + delayHintNext, width=spaceAfterTime)
                         ], spacing=0),
                         ft.Column([
                             ft.Container(width=10, height=25, border=toStationBorderTop, padding=ft.padding.all(0)),
@@ -379,7 +424,7 @@ class RoutingPage(MyPage):
                                                  bottom=ft.border.BorderSide(4, color_allocator(pData["line"])))
                 toStationRow = ft.Row([
                     ft.Row([
-                        ft.Text(pData["toTime"].strftime("%H:%M"), width=45),
+                        ft.Text(pData["toTime"].strftime("%H:%M") + delayHintTo, width=spaceAfterTime),
                         ft.Container(width=10, height=25, border=toStationBorder, padding=ft.padding.all(0),
                                      margin=ft.margin.only(bottom=20)),
                         ft.Text(pData["toStation"], size=15)
