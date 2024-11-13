@@ -131,8 +131,12 @@ class DeparturePage(MyPage):
 			for d in departures:
 				timedelta = datetime.fromtimestamp(d["realtimeDepartureTime"] / 1000) - datetime.now()
 				timedeltaValue = round(timedelta.total_seconds() / 60)
-				delayTime = d["delayInMinutes"]
 				if timedeltaValue < 0: continue
+
+				if "delayInMinutes" in d:
+					delayTime = d["delayInMinutes"]
+				else:
+					delayTime = 0
 
 				lineColor = color_allocator(d["label"])
 				if d["label"].startswith("S"):
