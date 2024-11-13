@@ -86,8 +86,15 @@ class MyPage(ft.AnimatedSwitcher):
 				bgcolor="#36618e",
 				color="white",
 				actions=[
-					ft.IconButton(ft.icons.MORE_VERT, on_click=lambda e, p=self.page: page_settings(p, self.curSe))]
+					ft.IconButton(ft.icons.MORE_VERT, on_click=lambda e, p=self.page: page_settings(p, self.curSe))
+				]
 			)
+
+			def close_app(_e):
+				self.page.window.close()
+
+			if self.page.platform is not ft.PagePlatform.ANDROID and self.page.platform is not ft.PagePlatform.IOS and self.page.web is False:
+				self.parent.parent.appbar.actions.append(ft.IconButton(ft.icons.CLOSE, on_click=lambda _e: close_app(_e)))
 
 			self.page.update()
 
