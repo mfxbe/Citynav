@@ -299,29 +299,20 @@ class RoutingPage(MyPage):
             pData = dict()
             pData["fromStation"] = p["from"]["name"]
             pData["fromTime"] = datetime.strptime(p["from"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
-            if "departureDelayInMinutes" in p["from"]:
-                pData["fromTimeDelay"] = p["from"]["departureDelayInMinutes"]
-            else:
-                pData["fromTimeDelay"] = 0
             pData["line"] = p["line"]["label"]
             pData["lineDestination"] = p["line"]["destination"]
             pData["toStation"] = p["to"]["name"]
             pData["toTime"] = datetime.strptime(p["to"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
+
+            if "departureDelayInMinutes" in p["from"]:
+                pData["fromTimeDelay"] = p["from"]["departureDelayInMinutes"]
+            else:
+                pData["fromTimeDelay"] = 0
+
             if "arrivalDelayInMinutes" in p["to"]:
                 pData["toTimeDelay"] = p["to"]["arrivalDelayInMinutes"]
             else:
                 pData["toTimeDelay"] = 0
-
-            if pData["line"] in self.curSe["rps"]:
-                msg = self.curSe["rps"][pData["line"]]
-                msgCopy = copy.deepcopy(msg)
-
-                # remove non disruption-type messages
-                newC = [elm for elm in msgCopy.content.content.controls if hasattr(elm, "myIsCurrent")]
-                msgCopy.content.content.controls = newC
-                msgCopy.content.content.controls.append(ft.Container(expand=True))
-
-                ePL.controls.insert(1, msgCopy)
 
             if pData["fromTimeDelay"] > 0:
                 delayHint = " (+" + str(pData["fromTimeDelay"]) + ")"
@@ -334,6 +325,24 @@ class RoutingPage(MyPage):
                 spaceAfterTime = 70
             else:
                 delayHintTo = ""
+
+            if index != len(rid["parts"]) - 1 and "departureDelayInMinutes" in rid["parts"][index + 1]["from"] and rid["parts"][index + 1]["from"]["departureDelayInMinutes"] > 0:
+                delayHintNext = " (+" + str(rid["parts"][index + 1]["from"]["departureDelayInMinutes"]) + ")"
+                spaceAfterTime = 70
+            else:
+                delayHintNext = "     "
+
+            if pData["line"] in self.curSe["rps"]:
+                msg = self.curSe["rps"][pData["line"]]
+                msgCopy = copy.deepcopy(msg)
+
+                # remove non disruption-type messages
+                newC = [elm for elm in msgCopy.content.content.controls if hasattr(elm, "myIsCurrent")]
+                msgCopy.content.content.controls = newC
+                msgCopy.content.content.controls.append(ft.Container(expand=True))
+
+                ePL.controls.insert(1, msgCopy)
+
 
             if index == 0:
                 fromStationBorder = ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"])),
@@ -397,11 +406,6 @@ class RoutingPage(MyPage):
                 nextStationTime = datetime.strptime(rid["parts"][index + 1]["from"]["plannedDeparture"][:-6],
                                                     "%Y-%m-%dT%H:%M:%S")
 
-                if "departureDelayInMinutes" in rid["parts"][index + 1]["from"] and rid["parts"][index + 1]["from"]["departureDelayInMinutes"] > 0:
-                    delayHintNext = " (+" + str(rid["parts"][index + 1]["from"]["departureDelayInMinutes"]) + ")"
-                    spaceAfterTime = 70
-                else:
-                    delayHintNext = "     "
 
                 toStationRow = ft.Row([
                     ft.Row([
