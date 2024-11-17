@@ -129,6 +129,8 @@ async def main(page: ft.Page):
 			on_change=view_changer
 		)
 		nb = mainView.rail
+		if page.web is False:
+			mainView.decoration = ft.BoxDecoration(border=ft.border.all(2, ft.colors.ON_PRIMARY), border_radius=ft.border_radius.all(2))
 
 	# make android back button work
 	def on_pop_with_back(eventView):
