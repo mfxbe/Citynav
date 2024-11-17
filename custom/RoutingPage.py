@@ -68,10 +68,18 @@ class RoutingPage(MyPage):
             toSearchBar.value = tmpValue
             curSe["page"].update()
 
-        def choose_time_ok(value, timeDialog):
-            if value is not None and value.strftime("%H:%M") != datetime.now().strftime("%H:%M"):
-                timeButtonText.value = value.strftime("%H:%M")
-                curSe["time"] = value.strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
+        def choose_time_ok(value, tomorrowCheckboxValue, timeDialog):
+            if tomorrowCheckboxValue and value is None:
+                value = datetime.now()
+
+            if value is not None and value.strftime("%H:%M") != datetime.now().strftime("%H:%M") or tomorrowCheckboxValue:
+                if tomorrowCheckboxValue:
+                    timeButtonText.value = value.strftime("%H:%M 🌣")
+                    value = value + timedelta(days=1)
+                    curSe["time"] = value.strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
+                else:
+                    timeButtonText.value = value.strftime("%H:%M")
+                    curSe["time"] = value.strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
             else:
                 timeButtonText.value = "Jetzt"
                 curSe["time"] = ""
@@ -81,10 +89,11 @@ class RoutingPage(MyPage):
 
         def choose_time(_e):
             timePicker = ft.CupertinoDatePicker(date_picker_mode=ft.CupertinoDatePickerMode.TIME, use_24h_format=True)
+            tomorrowCheckbox = ft.Checkbox(label="Morgen", value=False)
             timeDialog = ft.AlertDialog(title=ft.Text(_("Choose departure time")),
-                                        content=ft.Container(timePicker, height=150), actions=[
+                                        content=ft.Column([ft.Container(timePicker, height=100), tomorrowCheckbox], height=130), actions=[
                     ft.TextButton(_("Cancel"), on_click=lambda d: curSe["page"].close(timeDialog)),
-                    ft.TextButton(_("Confirm"), on_click=lambda d: choose_time_ok(timePicker.value, timeDialog))
+                    ft.TextButton(_("Confirm"), on_click=lambda d: choose_time_ok(timePicker.value, tomorrowCheckbox.value, timeDialog))
                 ])
             curSe["page"].open(timeDialog)
 
