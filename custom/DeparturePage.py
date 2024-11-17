@@ -77,7 +77,7 @@ class DeparturePage(MyPage):
 					timedelta = datetime.fromtimestamp(e.timeText.raw_data) - datetime.now()
 					timedeltaValue = round(timedelta.total_seconds() / 60)
 					if timedeltaValue >= 0:
-						e.timeText.value = str(timedeltaValue) + " Min"
+						e.timeText.value = str(timedeltaValue) + _(" min.")
 					else:
 						e.visible = False
 						listview.controls[index + 1].visible = False
