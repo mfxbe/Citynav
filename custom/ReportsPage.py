@@ -47,12 +47,12 @@ class ReportsPage(MyPage):
 		self.listview.controls.clear()
 
 		# mvg
-		if self.curSe["page"].web:
-			proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
-			req = Request(
-				proxy + "https://www.mvg.de/api/ems/tickers")  # FIXME find a better way around the cors limits
-		else:
-			req = Request("https://www.mvg.de/api/bgw-pt/v3/messages")
+		#  if self.curSe["page"].web:
+		# 	proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
+		#	req = Request(
+		#		proxy + "https://www.mvg.de/api/bgw-pt/v3/messages")  # FIXME find a better way around the cors limits
+		#else:
+		req = Request("https://www.mvg.de/api/bgw-pt/v3/messages")
 		response = urlopen(req)
 		reports = json.loads(response.read())
 
