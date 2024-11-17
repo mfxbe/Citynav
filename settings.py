@@ -14,7 +14,7 @@ def page_settings(page, curSe):
 		title=ft.Text(_("More")),
 		bgcolor=ft.colors.PRIMARY,
 		color="white",
-		actions=[ft.IconButton(ft.icons.CLOSE, on_click=lambda e: (page.views.pop(), page.update()))]
+		actions=[ft.IconButton(ft.icons.CANCEL, on_click=lambda e: (page.views.pop(), page.update()))]
 	)
 
 	settingsView.controls.append(ft.Text(_("Preferences"), theme_style=ft.TextThemeStyle.TITLE_MEDIUM))
