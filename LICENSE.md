@@ -538,3 +538,5 @@ given local legal effect according to their terms, reviewing courts shall apply 
 law that most closely approximates an absolute waiver of all civil liability in
 connection with the Program, unless a warranty or assumption of liability accompanies
 a copy of the Program in return for a fee.
+
+                     END OF TERMS AND CONDITIONS
