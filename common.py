@@ -82,7 +82,7 @@ class MyPage(ft.AnimatedSwitcher):
 				automatically_imply_leading=False,
 				leading_width=lw,
 				leading=backButton,
-				title=ft.Text(self.header),
+				title=ft.WindowDragArea(content=ft.Text(self.header), width=2000), #expand=True doesn't work so use high number here (seems to have no negative effects)
 				bgcolor="#36618e",
 				color="white",
 				actions=[
