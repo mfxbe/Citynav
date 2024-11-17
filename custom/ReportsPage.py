@@ -77,6 +77,12 @@ class ReportsPage(MyPage):
 			ol = []
 
 			for rl in r["lines"]:
+
+				# sort out line numbers bigger than 200 (buses outside of munich) there are so many reports there
+				# so this is for a better overview. In future todo: a setting to enable if needed
+				if int(re.sub(r'\D', '', rl["label"])) >= 200:
+					continue
+
 				if r["description"] + rl["label"] not in ol:
 					ol.append(r["description"] + rl["label"])
 					lineColor = color_allocator(rl["label"])
