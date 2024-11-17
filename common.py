@@ -82,7 +82,7 @@ class MyPage(ft.AnimatedSwitcher):
 				automatically_imply_leading=False,
 				leading_width=lw,
 				leading=backButton,
-				title=ft.WindowDragArea(content=ft.Text(self.header), width=2000), #expand=True doesn't work so use high number here (seems to have no negative effects)
+				title=ft.GestureDetector(content=ft.WindowDragArea(content=ft.Text(self.header), width=2000), mouse_cursor=ft.MouseCursor.MOVE), #expand=True doesn't work so use high number here (seems to have no negative effects); gesture controller to allow changing style of mouse
 				bgcolor="#36618e",
 				color="white",
 				actions=[
