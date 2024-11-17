@@ -3,7 +3,7 @@
 import asyncio
 import copy
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from urllib.request import urlopen
 
 import flet as ft
@@ -76,10 +76,10 @@ class RoutingPage(MyPage):
                 if tomorrowCheckboxValue:
                     timeButtonText.value = value.strftime("%H:%M 🌣")
                     value = value + timedelta(days=1)
-                    curSe["time"] = value.strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
+                    curSe["time"] = value.astimezone(timezone.utc).strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
                 else:
                     timeButtonText.value = value.strftime("%H:%M")
-                    curSe["time"] = value.strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
+                    curSe["time"] = value.astimezone(timezone.utc).strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
             else:
                 timeButtonText.value = "Jetzt"
                 curSe["time"] = ""
