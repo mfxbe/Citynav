@@ -43,18 +43,19 @@ def page_settings(page, curSe):
 		languageDropdown.value = "Deutsch"
 
 	settingsView.controls.append(
-		ft.Row([ft.Text("Language"), languageDropdown], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
+		ft.Row([ft.Text(_("Language")), languageDropdown], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
 	languageDropdown.on_change = lang_dropdown_changed
 
 
 	# colors
 	def dropdown_changed(e):
-		if e.control.value == _("Automatisch"):
+		if e.control.value == _("Automatic"):
 			value = "auto"
 		elif e.control.value == _("Light"):
 			value = "light"
 		else:
 			value = "dark"
+
 		curSe["settings"].set_key("theme", value)
 		curSe["page"].theme_mode = curSe["settings"].theme  # set theme according to new setting
 		curSe["page"].update()
@@ -65,12 +66,12 @@ def page_settings(page, curSe):
 		ft.dropdown.Option(_("Dark")),
 	], value=_("Automatic"))
 
-	if "auto" in curSe["settings"].theme:
+	if curSe["settings"].theme == "auto":
 		colorDropdown.value = _("Automatic")
-	elif "light" in curSe["settings"].theme:
+	elif  curSe["settings"].theme == "light":
 		colorDropdown.value = _("Light")
 	else:
-		languageDropdown.value = _("Dark")
+		colorDropdown.value = _("Dark")
 
 	settingsView.controls.append(
 		ft.Row([ft.Text(_("Color scheme")), colorDropdown], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
