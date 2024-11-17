@@ -104,7 +104,7 @@ class ReportsPage(MyPage):
 						self.listview.controls.append(entry)
 						con[rl["label"]] = contentColumn
 
-						if r["type"] == "DISRUPTION":
+						if r["type"] == "INCIDENT":
 							text.myIsCurrent = True
 							self.curSe["rps"][rl["label"]] = entry
 							p = len(self.listview.controls)
