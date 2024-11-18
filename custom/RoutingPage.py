@@ -56,7 +56,7 @@ class RoutingPage(MyPage):
             e.control.selected = not e.control.selected
             e.control.update()
             e.control.d["star"] = e.control.selected
-            curSe["settings"].set_key("connection_history", json.dumps(historyElms))
+            curSe["settings"].set_key("connection_history", json.dumps(historyElms, ensure_ascii=False))
 
         def history_clicked(fromSta, toSta):
             fromSearchBar.value = fromSta
@@ -157,7 +157,7 @@ class RoutingPage(MyPage):
                 if not found:
                     d = {"from": fromSearchBar.value, "to": toSearchBar.value, "latest": time.time(), "star": False}
                     historyElms.append(d)
-                curSe["settings"].set_key("connection_history", json.dumps(historyElms))
+                curSe["settings"].set_key("connection_history", json.dumps(historyElms, ensure_ascii=False))
                 process_history()
 
                 #load list page

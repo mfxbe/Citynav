@@ -82,7 +82,7 @@ def page_settings(page, curSe):
 		ft.Row([ft.Text(_("Color scheme")), colorDropdown], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
 	colorDropdown.on_change = dropdown_changed
 
-	# resultss
+	# results
 	def slider_changed(e):
 		curSe["settings"].set_key("results", e.control.value)
 		if e.control.value == 0:

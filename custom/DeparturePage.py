@@ -37,7 +37,7 @@ class DeparturePage(MyPage):
 			e.control.selected = not e.control.selected
 			e.control.update()
 			e.control.d["star"] = e.control.selected
-			curSe["settings"].set_key("departures_history", json.dumps(historyElms))
+			curSe["settings"].set_key("departures_history", json.dumps(historyElms, ensure_ascii=False))
 
 		def history_clicked(fromSta):
 			positionSearchBar.value = fromSta
@@ -52,7 +52,7 @@ class DeparturePage(MyPage):
 				historyElms = sorted(historyElms, key=lambda se: (-se["star"], -se["latest"]))
 				while len(historyElms) > 7:
 					historyElms.pop()
-				curSe["settings"].set_key("departures_history", json.dumps(historyElms))
+				curSe["settings"].set_key("departures_history", json.dumps(historyElms, ensure_ascii=False))
 
 				historyListView.controls = []
 				for e in historyElms:
