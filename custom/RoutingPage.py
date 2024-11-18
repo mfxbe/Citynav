@@ -69,7 +69,6 @@ class RoutingPage(MyPage):
         def process_history():
             nonlocal historyElms
             if curSe["settings"].connection_history != "":
-                print(curSe["settings"].connection_history)
                 historyElms = json.loads(curSe["settings"].connection_history)
                 historyElms = sorted(historyElms, key=lambda se: (-se["star"], -se["latest"]))
                 while len(historyElms) >= 7:
