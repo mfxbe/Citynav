@@ -32,6 +32,38 @@ class DeparturePage(MyPage):
 		historyHeader = ft.Text(_("History"), weight=ft.FontWeight.BOLD)
 		startPage.controls.append(ft.Row(controls=[historyHeader]))
 
+		historyElms = list()
+		def toggle_star_button(e):
+			e.control.selected = not e.control.selected
+			e.control.update()
+			e.control.d["star"] = e.control.selected
+			curSe["settings"].set_key("departures_history", json.dumps(historyElms))
+
+		def history_clicked(fromSta):
+			positionSearchBar.value = fromSta
+			positionSearchBar.update()
+
+		historyListView = ft.ListView(controls=[], divider_thickness=1, spacing=5, padding=ft.padding.only(left=10, right=10))
+		startPage.controls.append(historyListView)
+		def process_history():
+			nonlocal historyElms
+			if curSe["settings"].departures_history != "":
+				historyElms = json.loads(curSe["settings"].departures_history)
+				historyElms = sorted(historyElms, key=lambda se: (-se["star"], -se["latest"]))
+				while len(historyElms) > 7:
+					historyElms.pop()
+				curSe["settings"].set_key("departures_history", json.dumps(historyElms))
+
+				historyListView.controls = []
+				for e in historyElms:
+					container1 = ft.Text(e["station"])
+					container4 = ft.Container(expand=True)
+					container5 = ft.IconButton(selected=e["star"], icon=ft.icons.STAR_BORDER, selected_icon=ft.icons.STAR, on_click=toggle_star_button)
+					container5.d = e
+					containerRow = ft.Row(controls=[container1,  container4, container5])
+					historyListView.controls.append(ft.GestureDetector(containerRow, mouse_cursor=ft.MouseCursor.CLICK, on_tap=(lambda _d, f=e: (history_clicked(f["station"])))))
+		process_history()
+
 		self.add_sub("startPage", ft.Container(startPage, padding=10))
 
 		def do_action(e):
@@ -46,6 +78,20 @@ class DeparturePage(MyPage):
 			if curSe["positionID"] is not None:
 				goButton.content = ft.ProgressRing(width=14, height=14, color=ft.colors.ON_PRIMARY, stroke_width=2)
 				self.goButton.update()
+
+				# add to history
+				found = False
+				for e in historyElms:
+					if e["station"] == positionSearchBar.value:
+						found = True
+						e["latest"] = time.time()
+				if not found:
+					d = {"station": positionSearchBar.value, "latest": time.time(), "star": False}
+					historyElms.append(d)
+				curSe["settings"].set_key("departures_history", json.dumps(historyElms, ensure_ascii=False))
+				process_history()
+
+
 				self.display_result_page()
 			else:
 				curSe["page"].snack_bar = ft.SnackBar(ft.Text(_("Unknown stop")))

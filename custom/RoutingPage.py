@@ -3,6 +3,7 @@
 import asyncio
 import copy
 import json
+import time
 from datetime import datetime, timedelta, timezone
 from urllib.request import urlopen
 
@@ -50,8 +51,42 @@ class RoutingPage(MyPage):
         historyHeader = ft.Text(_("History"), weight=ft.FontWeight.BOLD)
         startRoutingPage.controls.append(ft.Row(controls=[historyHeader]))
 
-        container2 = ft.Container(expand=True)
-        container2.content = ft.Text("Non clickable")
+        historyElms = list()
+        def toggle_star_button(e):
+            e.control.selected = not e.control.selected
+            e.control.update()
+            e.control.d["star"] = e.control.selected
+            curSe["settings"].set_key("connection_history", json.dumps(historyElms))
+
+        def history_clicked(fromSta, toSta):
+            fromSearchBar.value = fromSta
+            toSearchBar.value = toSta
+            fromSearchBar.update()
+            toSearchBar.update()
+
+        historyListView = ft.ListView(controls=[], divider_thickness=1, spacing=5, padding=ft.padding.only(left=10, right=10))
+        startRoutingPage.controls.append(historyListView)
+        def process_history():
+            nonlocal historyElms
+            if curSe["settings"].connection_history != "":
+                print(curSe["settings"].connection_history)
+                historyElms = json.loads(curSe["settings"].connection_history)
+                historyElms = sorted(historyElms, key=lambda se: (-se["star"], -se["latest"]))
+                while len(historyElms) >= 7:
+                    historyElms.pop()
+                curSe["settings"].set_key("connection_history", json.dumps(historyElms, ensure_ascii=False))
+                historyListView.controls = []
+                for e in historyElms:
+                    container1 = ft.Text(e["from"])
+                    container2 = ft.Icon(ft.icons.ARROW_FORWARD, color=ft.colors.ON_SECONDARY_CONTAINER, size=18)
+                    container3 = ft.Text(e["to"])
+                    container4 = ft.Container(expand=True)
+                    container5 = ft.IconButton(selected=e["star"], icon=ft.icons.STAR_BORDER, selected_icon=ft.icons.STAR, on_click=toggle_star_button)
+                    container5.d = e
+                    containerRow = ft.Row(controls=[container1, container2, container3, container4, container5])
+                    historyListView.controls.append(ft.GestureDetector(containerRow, mouse_cursor=ft.MouseCursor.CLICK, on_tap=(lambda _d, f=e: (history_clicked(f["from"], f["to"])))))
+        process_history()
+
 
         # listPage (basics more see display_list_page)
         self.listPage = ft.Column()
@@ -113,6 +148,20 @@ class RoutingPage(MyPage):
             if (curSe["positionID"] is not None) and (curSe["position2ID"] is not None):
                 goButton.content = ft.ProgressRing(width=14, height=14, color=ft.colors.ON_PRIMARY, stroke_width=2)
                 goButton.update()
+
+                # add to history
+                found = False
+                for e in historyElms:
+                    if e["from"] == fromSearchBar.value and e["to"] == toSearchBar.value:
+                        found = True
+                        e["latest"] = time.time()
+                if not found:
+                    d = {"from": fromSearchBar.value, "to": toSearchBar.value, "latest": time.time(), "star": False}
+                    historyElms.append(d)
+                curSe["settings"].set_key("connection_history", json.dumps(historyElms))
+                process_history()
+
+                #load list page
                 self.curSe["jsonData"] = None
                 self.display_list_page()
             else:
