@@ -43,7 +43,7 @@ async def main(page: ft.Page):
 	global curSe
 
 	# basic
-	page.window.frameless = True
+	page.window.title_bar_hidden = True
 	page.title = "Citynav München"
 	mainView = ft.View(padding=0)
 	page.views.append(mainView)
