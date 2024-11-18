@@ -25,6 +25,8 @@ def page_settings(page, curSe):
 			value = "de"
 		elif e.control.value == "English":
 			value = "en"
+		elif e.control.value == "Italiano":
+			value = "it"
 		else:
 			value = "unset"
 		curSe["settings"].set_key("language", value)
@@ -34,11 +36,14 @@ def page_settings(page, curSe):
 
 	languageDropdown = ft.Dropdown(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[
 		ft.dropdown.Option("Deutsch"),
-		ft.dropdown.Option("English")
+		ft.dropdown.Option("English"),
+		ft.dropdown.Option("Italiano")
 	], value="unset")
 
 	if "en" in curSe["settings"].language:
 		languageDropdown.value = "English"
+	elif "it" in curSe["settings"].language:
+		languageDropdown.value = "Italiano"
 	else:
 		languageDropdown.value = "Deutsch"
 

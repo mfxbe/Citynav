@@ -32,7 +32,7 @@ data = {
 	"Balanced": "Ausgeglichen",
 	"Many": "Viele",
 	"Results": "Ergebnisse",
-	"Show stop position": "Haltepositonen anzeigen",
+	"Show stop position": "Haltepositionen anzeigen",
 	"Delete app data": "App-Daten löschen",
 	"Reset": "Zurücksetzen",
 	"Support": "Unterstützten",
