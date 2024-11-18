@@ -108,7 +108,7 @@ class RoutingPage(MyPage):
 
             if value is not None and value.strftime("%H:%M") != datetime.now().strftime("%H:%M") or tomorrowCheckboxValue:
                 if tomorrowCheckboxValue:
-                    timeButtonText.value = value.strftime("%H:%M 🌣")
+                    timeButtonText.value = value.strftime("%H:%M ☼")
                     value = value + timedelta(days=1)
                     curSe["time"] = value.astimezone(timezone.utc).strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
                 else:
@@ -183,17 +183,16 @@ class RoutingPage(MyPage):
             try: #use this here to stop an error appearing when this gets canceled wehen the apps is closed by the user
                 await asyncio.sleep(10)
             except: pass
-            print("check d")
 
             for index, e in enumerate(listview.controls):
                 if listview.page is None: break
                 if hasattr(e, "timeText"):
                     timedeltaValue = round((e.timeText.raw_data - datetime.now()).total_seconds() / 60)
                     if timedeltaValue >= 0:
-                        e.timeText.value = "in " + str(timedeltaValue) + _(" min.")
+                        e.timeText.value = _("in ") + str(timedeltaValue) + _(" min.")
                     else:
                         timedeltaValue = timedeltaValue * -1
-                        e.timeText.value = "vor " + str(timedeltaValue) + _(" min.")
+                        e.timeText.value = _("before ") + str(timedeltaValue) + _(" min.")
 
             if listview.page is not None:
                 listview.update()

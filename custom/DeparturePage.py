@@ -115,7 +115,6 @@ class DeparturePage(MyPage):
 			try: #use this here to stop an error appearing when this gets canceled wehen the apps is closed by the user
 				await asyncio.sleep(10)
 			except: pass
-			print("check")
 
 			for index, e in enumerate(listview.controls):
 				if listview.page is None: break
@@ -125,9 +124,9 @@ class DeparturePage(MyPage):
 					if timedeltaValue >= 0:
 						e.timeText.value = str(timedeltaValue) + _(" min.")
 					else:
-						e.visible = False
-						listview.controls[index + 1].visible = False
-						print("remove item")
+						listview.controls.remove(listview.controls[index + 1])
+						listview.controls.remove(listview.controls[index])
+				listview.page.update()
 
 			if listview.page is not None:
 				listview.update()

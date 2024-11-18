@@ -51,5 +51,7 @@ data = {
 	"Subway, Suburban, Tram, Bus, Regional": "U-Bahn, S-Bahn, Tram, Bus, Regio",
 	"Subway, Suburban, Regional, Bus": "U-Bahn, S-Bahn, Regio, Bus",
 	"Maps": "Netzpläne",
+	"before ": "vor ",
+	"in ": "in ",
 
 }
