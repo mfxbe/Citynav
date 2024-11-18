@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Import flet and systems libraries
+import asyncio
 import flet as ft
 
 from settings import *
@@ -135,8 +136,8 @@ class StorageHandler():
 		# defaults if everything in set_up fails
 		self.theme = "auto"
 		self.results = 1
-		self.connection_history = list()
-		self.departures_history = list()
+		self.connection_history = ""
+		self.departures_history = ""
 		self.default = 0
 		self.language = "unset"
 		self.stops_shown = False
@@ -147,8 +148,8 @@ class StorageHandler():
 		try:
 			self.theme = await self.set_from_storage("theme", "auto")
 			self.results = await self.set_from_storage("results", 1)
-			self.connection_history = await self.set_from_storage("connection_history", list())
-			self.departures_history = await self.set_from_storage("departures_history", list())
+			self.connection_history = await self.set_from_storage("connection_history", "")
+			self.departures_history = await self.set_from_storage("departures_history", "")
 			self.default = await self.set_from_storage("default", 0)
 			self.language = await self.set_from_storage("language", "unset")
 			self.stops_shown = await self.set_from_storage("stops_shown", False)
@@ -159,12 +160,29 @@ class StorageHandler():
 			self.p.update()
 
 	def set_key(self, key, value):
-		# this fails with a timeout error on web but does indeed work despite that
-		# see also set_from_storage and https://github.com/flet-dev/flet/issues/3783
+		#here a trick is needed because the "correct" way of loading the data from storage doesnt work in web
 		try:
-			self.p.client_storage.set(self.prefix + key, value)
+			loop = asyncio.get_event_loop()
+			loop.create_task( self.p._invoke_method_async( # noqa: WPS437
+			"clientStorage:set",
+				{"key": self.prefix + key, "value": value},
+				wait_timeout=10,
+			) )
 		except:
-			pass
+			asyncio.run( self.p._invoke_method_async( # noqa: WPS437
+				"clientStorage:set",
+				{"key": self.prefix + key, "value": value},
+				wait_timeout=10,
+			) )
+
+		# following is the "normal way"
+		# this would show a timeout error on web (but does indeed work despite that) but it takes for ever
+		# see also set_from_storage and https://github.com/flet-dev/flet/issues/3783
+		# try:
+		# 	self.p.client_storage.set(self.prefix + key, value)
+		# except:
+		# 	pass
+
 		setattr(self, key, value)
 
 	def get_key(self, key):
@@ -188,8 +206,14 @@ class StorageHandler():
 				wait_timeout=10,
 				wait_for_result=True,
 			)
-			result = result.replace("\"", "")
-			result = result.replace("\\", "")
+
+			# the data saved to client storage somehow gets a bit "corrupted" fixing this manually here
+			if "history" not in key:
+				result = result.replace("\"", "")
+				result = result.replace("\\", "")
+			else:
+				result = result.replace("\\", "")
+				result = result[1:-1]
 
 		#this is the code that should work but doesn't see: https://github.com/flet-dev/flet/issues/3783
 		##if self.p.client_storage.contains_key(self.prefix + key) or self.p.client_storage.get(
