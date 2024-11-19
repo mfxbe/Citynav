@@ -84,7 +84,7 @@ def page_settings(page, curSe):
 
 	# results
 	def slider_changed(e):
-		curSe["settings"].set_key("results", e.control.value)
+		curSe["settings"].set_key("results", int(e.control.value))
 		if e.control.value == 0:
 			e.control.label = _("Fast")
 			e.control.update()

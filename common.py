@@ -165,13 +165,13 @@ class StorageHandler():
 			loop = asyncio.get_event_loop()
 			loop.create_task( self.p._invoke_method_async( # noqa: WPS437
 			"clientStorage:set",
-				{"key": self.prefix + key, "value": value},
+				{"key": self.prefix + key, "value": str(value)},
 				wait_timeout=10,
 			) )
-		except:
+		except RuntimeError as e:
 			asyncio.run( self.p._invoke_method_async( # noqa: WPS437
 				"clientStorage:set",
-				{"key": self.prefix + key, "value": value},
+				{"key": self.prefix + key, "value": str(value)},
 				wait_timeout=10,
 			) )
 
@@ -182,7 +182,6 @@ class StorageHandler():
 		# 	self.p.client_storage.set(self.prefix + key, value)
 		# except:
 		# 	pass
-
 		setattr(self, key, value)
 
 	def get_key(self, key):
@@ -215,10 +214,16 @@ class StorageHandler():
 				result = result.replace("\\", "")
 				result = result[1:-1]
 
+			if result == "True": result = True
+			if result == "False": result = False
+			if key == "results": result = int(result[0])
+
 		#this is the code that should work but doesn't see: https://github.com/flet-dev/flet/issues/3783
 		##if self.p.client_storage.contains_key(self.prefix + key) or self.p.client_storage.get(
 		##		self.prefix + key) is not None:
 		##	result = self.p.client_storage.get(self.prefix + key)
+		# NOTE TO ME: if ever switching back to this way, also change a lot of settings stuff on other places because then
+		# all types are easily possible again not just strings like in the workaround above
 
 		return result
 
