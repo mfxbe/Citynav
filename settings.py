@@ -30,8 +30,9 @@ def page_settings(page, curSe):
 		else:
 			value = "unset"
 		curSe["settings"].set_key("language", value)
-		curSe["page"].snack_bar = ft.SnackBar(ft.Text(_("Restart app to finish language change.")))
-		curSe["page"].snack_bar.open = True
+		snBar = ft.SnackBar(ft.Text(_("Restart app to finish language change.")))
+		curSe["page"].overlay.append(snBar)
+		snBar.open = True
 		curSe["page"].update()
 
 	languageDropdown = ft.Dropdown(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[

@@ -46,6 +46,66 @@ class ReportsPage(MyPage):
 		#clear
 		self.listview.controls.clear()
 
+		con = dict()
+		p = 1
+
+		# s-bahn (only current disruptions because these are currently not part of the mvg api)
+		if self.curSe["page"].web:
+			proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
+			sReq = Request(
+				proxy + "https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell%26filter=false%26channel=REGIONAL%26prop=REGIONAL%26states=BY%26authors=S_BAHN_MUC")  # FIXME find a better way around the cors limits
+		else:
+			sReq = Request("https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell&filter=false&channel=REGIONAL&prop=REGIONAL&states=BY&authors=S_BAHN_MUC")
+		sBahnResponse = urlopen(sReq)
+		sBahnReports = json.loads(sBahnResponse.read())
+
+		for r in sBahnReports["disruptions"]:
+			r["text"] = r["text"].replace("<br/>", "\n")
+			r["text"] = r["text"].replace("<br>", "\n")
+			r["text"] = r["text"].replace("<li>", "\n\t• ")
+			r["text"] = html.unescape(REM_HTAG.sub('', r["text"]))
+
+			for l in r["lines"]:
+				l["name"] = l["name"].replace(" ", "")
+
+				if l["property"] == "SBAHN":
+					if l["name"] in con:
+						contentColumn = con[l["name"]]
+						contentColumn.controls.append(ft.Divider())
+						text = ft.Text(
+							spans=[ft.TextSpan(r["summary"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"])],
+							color="black")
+						contentColumn.controls.append(text)
+					else:
+						lineColor = color_allocator(l["name"])
+
+						img = ft.Container(ft.Text(l["name"], color=ft.colors.WHITE),
+										   bgcolor=lineColor, width=35,
+										   alignment=ft.alignment.center)
+						img.margin = ft.margin.only(left=10)
+						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
+						text = ft.Text(r["text"], color="black")
+						contentColumn.controls.append(text)
+						entry = ft.ExpansionPanel(header=ft.Row([img, ft.Container(ft.ListTile(
+							title=ft.Text(r["summary"].replace("\n", ""), color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
+							expand=True)]),
+												  content=ft.Container(contentColumn, padding=5,
+																	   alignment=ft.alignment.center_left),
+												  bgcolor="#ffb800",
+												  can_tap_header=True)
+						self.listview.controls.insert(p, entry)
+						p = p + 1
+
+						con[l["name"]] = contentColumn
+						self.curSe["rps"][l["name"]] = entry
+
+					text.myIsCurrent = True
+				else:
+					cL = l
+					cL["property"] = "SBAHN"
+					cL["name"] = "S" + r["headline"][2]
+					r["lines"].append(cL)
+
 		# mvg
 		#  if self.curSe["page"].web:
 		# 	proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
@@ -55,9 +115,6 @@ class ReportsPage(MyPage):
 		req = Request("https://www.mvg.de/api/bgw-pt/v3/messages")
 		response = urlopen(req)
 		reports = json.loads(response.read())
-
-		con = dict()
-		p = 1
 
 		for r in reports:
 			lineColor = "red"
@@ -119,62 +176,5 @@ class ReportsPage(MyPage):
 							text.myIsCurrent = True
 							self.curSe["rps"][rl["label"]] = entry
 							p = len(self.listview.controls)
-
-		# s-bahn (only current disruptions)
-		# if self.curSe["page"].web:
-		# 	proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
-		# 	sReq = Request(
-		# 		proxy + "https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell%26filter=false%26channel=REGIONAL%26prop=REGIONAL%26states=BY%26authors=S_BAHN_MUC")  # FIXME find a better way around the cors limits
-		# else:
-		# 	sReq = Request("https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell&filter=false&channel=REGIONAL&prop=REGIONAL&states=BY&authors=S_BAHN_MUC")
-		# sBahnResponse = urlopen(sReq)
-		# sBahnReports = json.loads(sBahnResponse.read())
-		#
-		# for r in sBahnReports["disruptions"]:
-		# 	r["text"] = r["text"].replace("<br/>", "\n")
-		# 	r["text"] = r["text"].replace("<br>", "\n")
-		# 	r["text"] = r["text"].replace("<li>", "\n\t• ")
-		# 	r["text"] = html.unescape(REM_HTAG.sub('', r["text"]))
-		#
-		# 	for l in r["lines"]:
-		# 		l["name"] = l["name"].replace(" ", "")
-		#
-		# 		if l["property"] == "SBAHN":
-		# 			if l["name"] in con:
-		# 				contentColumn = con[l["name"]]
-		# 				contentColumn.controls.append(ft.Divider())
-		# 				text = ft.Text(
-		# 					spans=[ft.TextSpan(r["summary"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"])],
-		# 					color="black")
-		# 				contentColumn.controls.append(text)
-		# 			else:
-		# 				lineColor = color_allocator(l["name"])
-		#
-		# 				img = ft.Container(ft.Text(l["name"], color=ft.colors.WHITE),
-		# 								   bgcolor=lineColor, width=35,
-		# 								   alignment=ft.alignment.center)
-		# 				img.margin = ft.margin.only(left=10)
-		# 				contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
-		# 				text = ft.Text(r["text"], color="black")
-		# 				contentColumn.controls.append(text)
-		# 				entry = ft.ExpansionPanel(header=ft.Row([img, ft.Container(ft.ListTile(
-		# 					title=ft.Text(r["summary"].replace("\n", ""), color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
-		# 					expand=True)]),
-		# 										  content=ft.Container(contentColumn, padding=5,
-		# 															   alignment=ft.alignment.center_left),
-		# 										  bgcolor="#ffb800",
-		# 										  can_tap_header=True)
-		# 				self.listview.controls.insert(p, entry)
-		# 				p = p + 1
-		#
-		# 				con[l["name"]] = contentColumn
-		# 				self.curSe["rps"][l["name"]] = entry
-		#
-		# 			text.myIsCurrent = True
-		# 		else:
-		# 			cL = l
-		# 			cL["property"] = "SBAHN"
-		# 			cL["name"] = "S" + r["headline"][2]
-		# 			r["lines"].append(cL)
 
 		self.switch_sub("list")

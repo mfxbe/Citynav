@@ -94,8 +94,9 @@ class DeparturePage(MyPage):
 
 				self.display_result_page()
 			else:
-				curSe["page"].snack_bar = ft.SnackBar(ft.Text(_("Unknown stop")))
-				curSe["page"].snack_bar.open = True
+				snBar = ft.SnackBar(ft.Text(_("Unknown stop")))
+				curSe["page"].overlay.append(snBar)
+				snBar.open = True
 				curSe["page"].update()
 
 		goButton.on_click = do_action
@@ -162,14 +163,16 @@ class DeparturePage(MyPage):
 			departures = json.loads(response.read())
 		except:
 			self.switch_sub("startPage")
-			self.page.snack_bar = ft.SnackBar(ft.Text(_("Error retrieving data.")))
-			self.page.snack_bar.open = True
+			snBar = ft.SnackBar(ft.Text(_("Error retrieving data.")))
+			curSe["page"].overlay.append(snBar)
+			snBar.open = True
 			self.page.update()
 		else:
 			if len(departures) < 1:
 				self.switch_sub("startPage")
-				self.page.snack_bar = ft.SnackBar(ft.Text(_("No departures found.")))
-				self.page.snack_bar.open = True
+				snBar = ft.SnackBar(ft.Text(_("No departures found.")))
+				self.page.overlay.append(snBar)
+				snBar.open = True
 				self.page.update()
 				return
 

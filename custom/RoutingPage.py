@@ -164,8 +164,9 @@ class RoutingPage(MyPage):
                 self.curSe["jsonData"] = None
                 self.display_list_page()
             else:
-                curSe["page"].snack_bar = ft.SnackBar(ft.Text(_("Unknown stop")))
-                curSe["page"].snack_bar.open = True
+                snBar = ft.SnackBar(ft.Text(_("Unknown stop")))
+                curSe["page"].overlay.append(snBar)
+                snBar.open = True
                 curSe["page"].update()
 
         timeButton.on_click = choose_time
@@ -245,14 +246,16 @@ class RoutingPage(MyPage):
         except Exception as e:
             print(e)
             self.switch_sub("startRoutingPage")
-            curSe["page"].snack_bar = ft.SnackBar(ft.Text(_("Error retrieving data.")))
-            curSe["page"].snack_bar.open = True
+            snBar = ft.SnackBar(ft.Text(_("Error retrieving data.")))
+            curSe["page"].overlay.append(snBar)
+            snBar.open = True
             curSe["page"].update()
         else:
             if len(routes) < 1:
                 self.switch_sub("startRoutingPage")
-                self.page.snack_bar = ft.SnackBar(ft.Text(_("No connections found.")))
-                self.page.snack_bar.open = True
+                snBar = ft.SnackBar(ft.Text(_("No connections found.")))
+                self.page.overlay.append(snBar)
+                snBar.open = True
                 self.page.update()
                 return
 

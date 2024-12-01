@@ -155,8 +155,9 @@ class StorageHandler():
 			self.stops_shown = await self.set_from_storage("stops_shown", False)
 		except Exception as e:
 			print(e)
-			self.p.snack_bar = ft.SnackBar(ft.Text(f"Fehler beim Setzten von Nutzereinstellungen"))
-			self.p.snack_bar.open = True
+			snBar = ft.SnackBar(ft.Text(f"Fehler beim Setzten von Nutzereinstellungen"))
+			self.p.overlay.append(snBar)
+			snBar.open = True
 			self.p.update()
 
 	def set_key(self, key, value):
