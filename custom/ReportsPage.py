@@ -63,7 +63,13 @@ class ReportsPage(MyPage):
 			r["text"] = r["text"].replace("<br/>", "\n")
 			r["text"] = r["text"].replace("<br>", "\n")
 			r["text"] = r["text"].replace("<li>", "\n\t• ")
+			r["text"] = r["text"].replace("<p>", "\n")
 			r["text"] = html.unescape(REM_HTAG.sub('', r["text"]))
+
+			#try filtering out non disruption reports because these are already in mvg api response
+			# todo there are probably more cases to handle here
+			if r["cause"]["category"] == "construction" and not r["topDisruption"]:
+				continue
 
 			for l in r["lines"]:
 				l["name"] = l["name"].replace(" ", "")
@@ -73,7 +79,7 @@ class ReportsPage(MyPage):
 						contentColumn = con[l["name"]]
 						contentColumn.controls.append(ft.Divider())
 						text = ft.Text(
-							spans=[ft.TextSpan(r["summary"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"])],
+							spans=[ft.TextSpan(r["headline"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"])],
 							color="black")
 						contentColumn.controls.append(text)
 					else:
@@ -87,7 +93,7 @@ class ReportsPage(MyPage):
 						text = ft.Text(r["text"], color="black")
 						contentColumn.controls.append(text)
 						entry = ft.ExpansionPanel(header=ft.Row([img, ft.Container(ft.ListTile(
-							title=ft.Text(r["summary"].replace("\n", ""), color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
+							title=ft.Text(r["headline"].replace("\n", ""), color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
 							expand=True)]),
 												  content=ft.Container(contentColumn, padding=5,
 																	   alignment=ft.alignment.center_left),
