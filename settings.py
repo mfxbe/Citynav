@@ -12,9 +12,9 @@ def page_settings(page, curSe):
 		leading=ft.Text(""),
 		center_title=True,
 		title=ft.Text(_("More")),
-		bgcolor=ft.colors.PRIMARY,
+		bgcolor=ft.Colors.PRIMARY,
 		color="white",
-		actions=[ft.IconButton(ft.icons.CANCEL, on_click=lambda e: (page.views.pop(), page.update()))]
+		actions=[ft.IconButton(ft.Icons.CANCEL, on_click=lambda e: (page.views.pop(), page.update()))]
 	)
 
 	settingsView.controls.append(ft.Text(_("Preferences"), theme_style=ft.TextThemeStyle.TITLE_MEDIUM))
@@ -120,7 +120,7 @@ def page_settings(page, curSe):
 		curSe["settings"].reset_all()
 
 	delButton = ft.FilledButton(width=200, text=_("Delete app data"),
-								style=ft.ButtonStyle(bgcolor=ft.colors.RED, color="white"))
+								style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color="white"))
 	settingsView.controls.append(
 		ft.Row([ft.Text(_("Reset")), delButton], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
 	delButton.on_click = reset_app
@@ -144,7 +144,7 @@ def page_settings(page, curSe):
 	settingsView.controls.append(ft.Text(spans=[
 		ft.TextSpan(_("To find out more about the public software licence, ")),
 		ft.TextSpan(_("click here"), url="https://github.com/mfxbe/Citynav/blob/master/LICENSE.md", url_target=ft.UrlTarget.BLANK,
-					style=ft.TextStyle(color=ft.colors.PRIMARY)),
+					style=ft.TextStyle(color=ft.Colors.PRIMARY)),
 		ft.TextSpan(".")
 	]))
 

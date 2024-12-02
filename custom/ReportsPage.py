@@ -6,6 +6,7 @@ import re
 from datetime import datetime
 from urllib.request import urlopen, Request
 
+import flet
 import flet as ft
 
 # Import other parts of this app
@@ -23,11 +24,11 @@ class ReportsPage(MyPage):
 		self.loaded = None
 		self.curSe["rps"] = dict()
 
-		listview = ft.ExpansionPanelList(expand=True, elevation=0)
+		listview = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.Colors.PRIMARY)
 		listview.expand = True
 		self.listview = listview
 		self.add_sub("start", ft.Container(
-			content=ft.ProgressRing(width=14, height=14, color=ft.colors.PRIMARY, stroke_width=2),
+			content=ft.ProgressRing(width=14, height=14, color=ft.Colors.PRIMARY, stroke_width=2),
 			expand=True,
 			alignment=ft.alignment.center))
 		self.add_sub("list", ft.ListView([listview], expand=True))
@@ -64,6 +65,7 @@ class ReportsPage(MyPage):
 			r["text"] = r["text"].replace("<br>", "\n")
 			r["text"] = r["text"].replace("<li>", "\n\t• ")
 			r["text"] = r["text"].replace("<p>", "\n")
+			r["text"] = r["text"].replace("\n", "", 1)
 			r["text"] = html.unescape(REM_HTAG.sub('', r["text"]))
 
 			#try filtering out non disruption reports because these are already in mvg api response
@@ -85,16 +87,18 @@ class ReportsPage(MyPage):
 					else:
 						lineColor = color_allocator(l["name"])
 
-						img = ft.Container(ft.Text(l["name"], color=ft.colors.WHITE),
+						img = ft.Container(ft.Text(l["name"], color=ft.Colors.WHITE),
 										   bgcolor=lineColor, width=35,
 										   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
 						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
 						text = ft.Text(r["text"], color="black")
 						contentColumn.controls.append(text)
-						entry = ft.ExpansionPanel(header=ft.Row([img, ft.Container(ft.ListTile(
-							title=ft.Text(r["headline"].replace("\n", ""), color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
-							expand=True)]),
+						entry = ft.ExpansionPanel(header=ft.Row([img,
+																 ft.Container(ft.ListTile(
+																	 title=ft.Text(r["headline"].replace("\n", ""), color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
+																	 bgcolor="#ffb800"
+																 ), expand=True)]),
 												  content=ft.Container(contentColumn, padding=5,
 																	   alignment=ft.alignment.center_left),
 												  bgcolor="#ffb800",
@@ -163,18 +167,23 @@ class ReportsPage(MyPage):
 							color=fontColor, expand=True)
 						contentColumn.controls.append(text)
 					else:
-						img = ft.Container(ft.Text(rl["label"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
+						img = ft.Container(ft.Text(rl["label"], color=ft.Colors.WHITE), bgcolor=lineColor, width=35,
 										   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
 						contentColumn = ft.Column()
 						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
 						text = ft.Text(r["description"], color=fontColor, expand=True)
 						contentColumn.controls.append(text)
-						entry = ft.ExpansionPanel(header=ft.Row([img, ft.Container(ft.ListTile(
-							title=ft.Text(r["title"], color=fontColor, theme_style=ft.TextThemeStyle.TITLE_MEDIUM)),
-							expand=True)]),
-												  content=ft.Container(contentColumn, padding=5), bgcolor=backColor,
-												  can_tap_header=True)
+						entry = ft.ExpansionPanel(
+							header=ft.Row([img,
+										   ft.Container(ft.ListTile(
+											   title=ft.Text(r["title"], color=fontColor, theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
+											   bgcolor=backColor
+										   ), expand=True)]),
+							content=ft.Container(contentColumn, padding=5),
+							bgcolor=backColor,
+							can_tap_header=True
+						)
 						self.listview.controls.append(entry)
 						con[rl["label"]] = contentColumn
 

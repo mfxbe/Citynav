@@ -53,7 +53,7 @@ class MapsPage(MyPage):
 		self.mapController = ft.InteractiveViewer(content=ft.Text(""), boundary_margin=ft.margin.all(50), min_scale=0.5, max_scale=10, constrained=False)
 
 		s = ft.Stack([
-			ft.Container(ft.ProgressRing(width=14, height=14, color=ft.colors.PRIMARY, stroke_width=2),
+			ft.Container(ft.ProgressRing(width=14, height=14, color=ft.Colors.PRIMARY, stroke_width=2),
 						 alignment=ft.alignment.center, left=0, right=0, top=0, bottom=0),
 			self.mapController
 		], expand=True)
@@ -75,7 +75,7 @@ class MapsPage(MyPage):
 									   ft.TextSpan(description, ft.TextStyle(size=10))]),
 				on_click=lambda e: on_click_action(),
 				alignment=ft.alignment.bottom_left,
-				padding=ft.padding.all(3), border=ft.border.all(1, ft.colors.GREY_600),
+				padding=ft.padding.all(3), border=ft.border.all(1, ft.Colors.GREY_600),
 				border_radius=ft.border_radius.all(10))
 		])
 		self.mapsOverview.controls.append(item)

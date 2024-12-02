@@ -61,11 +61,11 @@ async def main(page: ft.Page):
 
 	# Some color fixes and preferences
 	# page.theme_mode = ft.ThemeMode.DARK
-	page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary=ft.colors.BACKGROUND),
+	page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#f8f9ff"),
 						  search_bar_theme=ft.SearchBarTheme(elevation=1),
 						  system_overlay_style=ft.SystemOverlayStyle(status_bar_brightness=ft.Brightness.DARK,
 																	 status_bar_icon_brightness=ft.Brightness.LIGHT))
-	page.dark_theme = ft.theme.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
+	page.dark_theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
 									 text_theme=ft.TextTheme(
 										 title_medium=ft.TextStyle(weight=ft.FontWeight.NORMAL, color="white")),
 									 system_overlay_style=ft.SystemOverlayStyle(
@@ -107,10 +107,10 @@ async def main(page: ft.Page):
 		page.window.width = 400
 		# navigation for mobile
 		mainView.navigation_bar = ft.NavigationBar(
-			destinations=[ft.NavigationBarDestination(icon=ft.icons.ROUTE, label=_("Connections")),
-						  ft.NavigationBarDestination(icon=ft.icons.NEAR_ME, label=_("Departures")),
-						  ft.NavigationBarDestination(icon=ft.icons.LIST, label=_("Disruptions")),
-						  ft.NavigationBarDestination(icon=ft.icons.MAP, label=_("Maps"))], selected_index=0,
+			destinations=[ft.NavigationBarDestination(icon=ft.Icons.ROUTE, label=_("Connections")),
+						  ft.NavigationBarDestination(icon=ft.Icons.NEAR_ME, label=_("Departures")),
+						  ft.NavigationBarDestination(icon=ft.Icons.LIST, label=_("Disruptions")),
+						  ft.NavigationBarDestination(icon=ft.Icons.MAP, label=_("Maps"))], selected_index=0,
 			on_change=view_changer)
 		nb = mainView.navigation_bar
 	else:
@@ -121,16 +121,16 @@ async def main(page: ft.Page):
 			selected_index=0,
 			extended=True,
 			destinations=[
-				ft.NavigationRailDestination(icon=ft.icons.ROUTE, label=_("Connections")),
-				ft.NavigationRailDestination(icon=ft.icons.NEAR_ME, label=_("Departures")),
-				ft.NavigationRailDestination(icon=ft.icons.LIST, label=_("Disruptions")),
-				ft.NavigationRailDestination(icon=ft.icons.MAP, label=_("Maps")),
+				ft.NavigationRailDestination(icon=ft.Icons.ROUTE, label=_("Connections")),
+				ft.NavigationRailDestination(icon=ft.Icons.NEAR_ME, label=_("Departures")),
+				ft.NavigationRailDestination(icon=ft.Icons.LIST, label=_("Disruptions")),
+				ft.NavigationRailDestination(icon=ft.Icons.MAP, label=_("Maps")),
 			],
 			on_change=view_changer
 		)
 		nb = mainView.rail
 		if page.web is False:
-			mainView.decoration = ft.BoxDecoration(border=ft.border.all(2, ft.colors.ON_PRIMARY), border_radius=ft.border_radius.all(2))
+			mainView.decoration = ft.BoxDecoration(border=ft.border.all(2, ft.Colors.ON_PRIMARY), border_radius=ft.border_radius.all(2))
 
 	# make android back button work
 	def on_pop_with_back(eventView):
