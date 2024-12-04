@@ -6,16 +6,26 @@ from locales import _
 
 
 def page_settings(page, curSe):
-	settingsView = ft.View(spacing=10)
 
-	settingsView.appbar = ft.AppBar(
-		leading=ft.Text(""),
-		center_title=True,
-		title=ft.Text(_("More")),
-		bgcolor=ft.Colors.PRIMARY,
-		color="white",
-		actions=[ft.IconButton(ft.Icons.CANCEL, on_click=lambda e: (page.views.pop(), page.update()))]
-	)
+	if page.platform is ft.PagePlatform.IOS or page.platform is ft.PagePlatform.ANDROID:
+		settingsView = ft.View(spacing=10)
+		settingsView.appbar = ft.AppBar(
+			leading=ft.Text(""),
+			center_title=True,
+			title=ft.Text(_("More")),
+			bgcolor=ft.Colors.PRIMARY,
+			color="white",
+			actions=[ft.IconButton(ft.Icons.CLOSE, on_click=lambda e: (page.views.pop(), page.update()))]
+		)
+		page.views.append(settingsView)
+	else:
+		settingsView = ft.Column(spacing=10)
+		tR = ft.Row([
+			ft.Text(_("More")),
+			ft.IconButton(ft.Icons.CLOSE, on_click=lambda e: page.close(settingsDialog))
+		], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+		settingsDialog = ft.AlertDialog(title=tR, content=settingsView)
+		page.open(settingsDialog)
 
 	settingsView.controls.append(ft.Text(_("Preferences"), theme_style=ft.TextThemeStyle.TITLE_MEDIUM))
 
@@ -153,5 +163,4 @@ def page_settings(page, curSe):
 		ft.Container(ft.Text("Citynav München 0.1.0 © 2024 Manuel Ehrmanntraut", size=8, weight=ft.FontWeight.W_300),
 					 alignment=ft.alignment.center))
 
-	page.views.append(settingsView)
 	page.update()
