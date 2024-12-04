@@ -24,7 +24,7 @@ class ReportsPage(MyPage):
 		self.loaded = None
 		self.curSe["rps"] = dict()
 
-		listview = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.Colors.PRIMARY)
+		listview = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.Colors.PRIMARY, expanded_header_padding=ft.padding.symmetric(vertical=8.0))
 		listview.expand = True
 		self.listview = listview
 		self.add_sub("start", ft.Container(
