@@ -159,11 +159,18 @@ class ReportsPage(MyPage):
 
 					if rl["label"] in con:
 						contentColumn = con[rl["label"]]
-						contentColumn.controls.append(ft.Divider(color=fontColor))
+
+						# if disruption then allways black font color and not the defined one from above
+						if hasattr(contentColumn.controls[0], "myIsCurrent"):
+							uFontColor = "black"
+						else:
+							uFontColor = fontColor
+
+						contentColumn.controls.append(ft.Divider(color=uFontColor))
 
 						text = ft.Text(
 							spans=[ft.TextSpan(r["title"] + "\n", ft.TextStyle(size=15)), ft.TextSpan("\n" + r["description"])],
-							color=fontColor, expand=True)
+							color=uFontColor, expand=True)
 						contentColumn.controls.append(text)
 					else:
 						img = ft.Container(ft.Text(rl["label"], color=ft.Colors.WHITE), bgcolor=lineColor, width=35,
