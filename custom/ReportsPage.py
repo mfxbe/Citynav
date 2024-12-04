@@ -95,10 +95,13 @@ class ReportsPage(MyPage):
 						text = ft.Text(r["text"], color="black")
 						contentColumn.controls.append(text)
 						entry = ft.ExpansionPanel(header=ft.Row([img,
-																 ft.Container(ft.ListTile(
-																	 title=ft.Text(r["headline"].replace("\n", ""), color="black", theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
-																	 bgcolor="#ffb800"
-																 ), expand=True)]),
+																 ft.Container(ft.Text(r["headline"].replace("\n", ""),
+																					  color="black",
+																					  theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
+																			  expand=True,
+																			  padding=ft.padding.all(15)
+																			  )]
+																),
 												  content=ft.Container(contentColumn, padding=5,
 																	   alignment=ft.alignment.center_left),
 												  bgcolor="#ffb800",
@@ -176,10 +179,13 @@ class ReportsPage(MyPage):
 						contentColumn.controls.append(text)
 						entry = ft.ExpansionPanel(
 							header=ft.Row([img,
-										   ft.Container(ft.ListTile(
-											   title=ft.Text(r["title"], color=fontColor, theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
-											   bgcolor=backColor
-										   ), expand=True)]),
+										   ft.Container(ft.Text(r["title"],
+																color=fontColor,
+																theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
+															expand=True,
+															padding=ft.padding.all(15)
+														)]
+										  ),
 							content=ft.Container(contentColumn, padding=5),
 							bgcolor=backColor,
 							can_tap_header=True
