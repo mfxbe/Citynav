@@ -159,10 +159,6 @@ class ReportsPage(MyPage):
 
 					if rl["label"] in con:
 						contentColumn = con[rl["label"]]
-												# if disruption then allways black font color and not the defined one from above
-						if hasattr(contentColumn.controls[0], "myIsCurrent"):
-							fontColor = "black"
-
 						contentColumn.controls.append(ft.Divider(color=fontColor))
 
 						text = ft.Text(
