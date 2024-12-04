@@ -194,7 +194,7 @@ class DeparturePage(MyPage):
 					cont = ft.Container(ft.Text(d["label"], color=ft.Colors.WHITE), bgcolor=lineColor, width=35,
 										alignment=ft.alignment.center)
 
-				timeText = ft.Text(str(timedeltaValue) + _(" min."), width=55)
+				timeText = ft.Text(str(timedeltaValue) + _(" min."), width=55, weight=ft.FontWeight.BOLD)
 				timeText.raw_data = d["realtimeDepartureTime"] / 1000
 
 				if delayTime > 0:
