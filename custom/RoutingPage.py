@@ -348,7 +348,7 @@ class RoutingPage(MyPage):
         listview = ft.ListView(expand=True, spacing=0)
         mStack.controls.append(listview)
 
-        ePL = ft.ExpansionPanelList(expand=True, elevation=0)
+        ePL = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.Colors.PRIMARY, expanded_header_padding=ft.padding.symmetric(vertical=8.0))
         listview.controls.append(ePL)
 
         spaceAfterTime = 45
