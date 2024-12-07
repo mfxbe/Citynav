@@ -8,3 +8,5 @@ stopsdata.py
 assets/maps/*
 builds
 build_tmp
+.aider.tags.cache.v3
+storage

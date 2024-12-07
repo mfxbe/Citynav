@@ -7,7 +7,8 @@ mkdir -p build_tmp/work
 
 cp *.py build_tmp/
 cp -r locales_data build_tmp/locales_data
-cp -r custom build_tmp/custom
+mkdir -p build_tmp/custom
+cp -r custom build_tmp/custom/*.py
 cp requirements.txt build_tmp/
 cp -r assets build_tmp
 cd build_tmp || exit
@@ -31,9 +32,9 @@ then
   mv work/* ../builds/web
   rm ../builds/web/icons/*
   rm ../builds/web/favicon.png
-  cp ../builds/web/icon.png ../builds/web/icons/icon.png
-  cp ../builds/web/splash.png ../builds/web/icons/loading-animation.png
-  cp ../builds/web/icon.png ../builds/web/favicon.png
+  cp ../assets/icon.png ../builds/web/icons/icon.png
+  cp ../assets/icon.png ../builds/web/icons/loading-animation.png
+  cp ../assets/icon.png ../builds/web/favicon.png
   cp ../web_manifest.json ../builds/web/manifest.json
   sed -i -e 's/black/#36618e/g' ../builds/web/index.html
   sed -i -e 's/apple-touch-icon-192/icon/g' ../builds/web/index.html

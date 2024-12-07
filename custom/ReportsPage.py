@@ -24,7 +24,8 @@ class ReportsPage(MyPage):
 		self.loaded = None
 		self.curSe["rps"] = dict()
 
-		listview = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.Colors.PRIMARY, expanded_header_padding=ft.padding.symmetric(vertical=8.0))
+		listview = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.Colors.PRIMARY,
+		                                 expanded_header_padding=ft.padding.symmetric(vertical=8.0))
 		listview.expand = True
 		self.listview = listview
 		self.add_sub("start", ft.Container(
@@ -44,7 +45,7 @@ class ReportsPage(MyPage):
 			self.switch_sub("list")
 
 	async def load_reports(self):
-		#clear
+		# clear
 		self.listview.controls.clear()
 
 		con = dict()
@@ -56,7 +57,8 @@ class ReportsPage(MyPage):
 			sReq = Request(
 				proxy + "https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell%26filter=false%26channel=REGIONAL%26prop=REGIONAL%26states=BY%26authors=S_BAHN_MUC")  # FIXME find a better way around the cors limits
 		else:
-			sReq = Request("https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell&filter=false&channel=REGIONAL&prop=REGIONAL&states=BY&authors=S_BAHN_MUC")
+			sReq = Request(
+				"https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell&filter=false&channel=REGIONAL&prop=REGIONAL&states=BY&authors=S_BAHN_MUC")
 		sBahnResponse = urlopen(sReq)
 		sBahnReports = json.loads(sBahnResponse.read())
 
@@ -68,7 +70,7 @@ class ReportsPage(MyPage):
 			r["text"] = r["text"].replace("\n", "", 1)
 			r["text"] = html.unescape(REM_HTAG.sub('', r["text"]))
 
-			#try filtering out non disruption reports because these are already in mvg api response
+			# try filtering out non disruption reports because these are already in mvg api response
 			# todo there are probably more cases to handle here
 			if r["cause"]["category"] == "construction" and not r["topDisruption"]:
 				continue
@@ -81,31 +83,32 @@ class ReportsPage(MyPage):
 						contentColumn = con[l["name"]]
 						contentColumn.controls.append(ft.Divider())
 						text = ft.Text(
-							spans=[ft.TextSpan(r["headline"] + "\n", ft.TextStyle(size=16)), ft.TextSpan("\n" + r["text"])],
+							spans=[ft.TextSpan(r["headline"] + "\n", ft.TextStyle(size=16)),
+							       ft.TextSpan("\n" + r["text"])],
 							color="black")
 						contentColumn.controls.append(text)
 					else:
 						lineColor = color_allocator(l["name"])
 
 						img = ft.Container(ft.Text(l["name"], color=ft.Colors.WHITE),
-										   bgcolor=lineColor, width=35,
-										   alignment=ft.alignment.center)
+						                   bgcolor=lineColor, width=35,
+						                   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
 						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
 						text = ft.Text(r["text"], color="black")
 						contentColumn.controls.append(text)
 						entry = ft.ExpansionPanel(header=ft.Row([img,
-																 ft.Container(ft.Text(r["headline"].replace("\n", ""),
-																					  color="black",
-																					  theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
-																			  expand=True,
-																			  padding=ft.padding.all(15)
-																			  )]
-																),
-												  content=ft.Container(contentColumn, padding=5,
-																	   alignment=ft.alignment.center_left),
-												  bgcolor="#ffb800",
-												  can_tap_header=True)
+						                                         ft.Container(ft.Text(r["headline"].replace("\n", ""),
+						                                                              color="black",
+						                                                              theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
+						                                                      expand=True,
+						                                                      padding=ft.padding.all(15)
+						                                                      )]
+						                                        ),
+						                          content=ft.Container(contentColumn, padding=5,
+						                                               alignment=ft.alignment.center_left),
+						                          bgcolor="#ffb800",
+						                          can_tap_header=True)
 						self.listview.controls.insert(p, entry)
 						p = p + 1
 
@@ -124,7 +127,7 @@ class ReportsPage(MyPage):
 		# 	proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
 		#	req = Request(
 		#		proxy + "https://www.mvg.de/api/bgw-pt/v3/messages")  # FIXME find a better way around the cors limits
-		#else:
+		# else:
 		req = Request("https://www.mvg.de/api/bgw-pt/v3/messages")
 		response = urlopen(req)
 		reports = json.loads(response.read())
@@ -169,12 +172,13 @@ class ReportsPage(MyPage):
 						contentColumn.controls.append(ft.Divider(color=uFontColor))
 
 						text = ft.Text(
-							spans=[ft.TextSpan(r["title"] + "\n", ft.TextStyle(size=15)), ft.TextSpan("\n" + r["description"])],
+							spans=[ft.TextSpan(r["title"] + "\n", ft.TextStyle(size=15)),
+							       ft.TextSpan("\n" + r["description"])],
 							color=uFontColor, expand=True)
 						contentColumn.controls.append(text)
 					else:
 						img = ft.Container(ft.Text(rl["label"], color=ft.Colors.WHITE), bgcolor=lineColor, width=35,
-										   alignment=ft.alignment.center)
+						                   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
 						contentColumn = ft.Column()
 						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
@@ -182,13 +186,13 @@ class ReportsPage(MyPage):
 						contentColumn.controls.append(text)
 						entry = ft.ExpansionPanel(
 							header=ft.Row([img,
-										   ft.Container(ft.Text(r["title"],
-																color=fontColor,
-																theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
-															expand=True,
-															padding=ft.padding.all(15)
-														)]
-										  ),
+							               ft.Container(ft.Text(r["title"],
+							                                    color=fontColor,
+							                                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
+							                            expand=True,
+							                            padding=ft.padding.all(15)
+							                            )]
+							              ),
 							content=ft.Container(contentColumn, padding=5),
 							bgcolor=backColor,
 							can_tap_header=True
