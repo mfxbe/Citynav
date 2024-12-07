@@ -13,16 +13,16 @@ def page_settings(page, curSe):
 			leading=ft.Text(""),
 			center_title=True,
 			title=ft.Text(_("More")),
-			bgcolor=ft.Colors.PRIMARY,
+			bgcolor=ft.colors.PRIMARY,
 			color="white",
-			actions=[ft.IconButton(ft.Icons.CLOSE, on_click=lambda e: (page.views.pop(), page.update()))]
+			actions=[ft.IconButton(ft.icons.CLOSE, on_click=lambda e: (page.views.pop(), page.update()))]
 		)
 		page.views.append(settingsView)
 	else:
 		settingsView = ft.Column(spacing=10)
 		tR = ft.Row([
 			ft.Text(_("More")),
-			ft.IconButton(ft.Icons.CLOSE, on_click=lambda e: page.close(settingsDialog))
+			ft.IconButton(ft.icons.CLOSE, on_click=lambda e: page.close(settingsDialog))
 		], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
 		settingsDialog = ft.AlertDialog(title=tR, content=settingsView)
 		page.open(settingsDialog)
@@ -130,7 +130,7 @@ def page_settings(page, curSe):
 		curSe["settings"].reset_all()
 
 	delButton = ft.FilledButton(width=200, text=_("Delete app data"),
-								style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color="white"))
+	                            style=ft.ButtonStyle(bgcolor=ft.colors.RED, color="white"))
 	settingsView.controls.append(
 		ft.Row([ft.Text(_("Reset")), delButton], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
 	delButton.on_click = reset_app
@@ -154,7 +154,7 @@ def page_settings(page, curSe):
 	settingsView.controls.append(ft.Text(spans=[
 		ft.TextSpan(_("To find out more about the public software licence, ")),
 		ft.TextSpan(_("click here"), url="https://github.com/mfxbe/Citynav/blob/master/LICENSE.md", url_target=ft.UrlTarget.BLANK,
-					style=ft.TextStyle(color=ft.Colors.PRIMARY)),
+		            style=ft.TextStyle(color=ft.colors.PRIMARY)),
 		ft.TextSpan(".")
 	]))
 

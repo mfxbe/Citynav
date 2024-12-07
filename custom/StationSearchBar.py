@@ -11,11 +11,11 @@ class StationSearchBar(ft.SearchBar):
 		self.stations = []
 		self.lv = ft.ListView()
 
-		searchPositionButton = ft.IconButton(icon=ft.Icons.LOCATION_ON_OUTLINED)
+		searchPositionButton = ft.IconButton(icon=ft.icons.LOCATION_ON_OUTLINED)
 		self.searchPositionButton = searchPositionButton
 
 		self.stations = stations
-		self.bar_bgcolor = ft.Colors.ON_TERTIARY
+		self.bar_bgcolor = ft.colors.ON_TERTIARY
 		self.bar_trailing = [searchPositionButton]
 		self.view_hint_text = _("Haltestelle")
 		self.bar_hint_text = hint

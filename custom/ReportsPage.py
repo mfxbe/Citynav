@@ -24,12 +24,12 @@ class ReportsPage(MyPage):
 		self.loaded = None
 		self.curSe["rps"] = dict()
 
-		listview = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.Colors.PRIMARY,
+		listview = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.colors.PRIMARY,
 		                                 expanded_header_padding=ft.padding.symmetric(vertical=8.0))
 		listview.expand = True
 		self.listview = listview
 		self.add_sub("start", ft.Container(
-			content=ft.ProgressRing(width=14, height=14, color=ft.Colors.PRIMARY, stroke_width=2),
+			content=ft.ProgressRing(width=14, height=14, color=ft.colors.PRIMARY, stroke_width=2),
 			expand=True,
 			alignment=ft.alignment.center))
 		self.add_sub("list", ft.ListView([listview], expand=True))
@@ -90,7 +90,7 @@ class ReportsPage(MyPage):
 					else:
 						lineColor = color_allocator(l["name"])
 
-						img = ft.Container(ft.Text(l["name"], color=ft.Colors.WHITE),
+						img = ft.Container(ft.Text(l["name"], color=ft.colors.WHITE),
 						                   bgcolor=lineColor, width=35,
 						                   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
@@ -177,7 +177,7 @@ class ReportsPage(MyPage):
 							color=uFontColor, expand=True)
 						contentColumn.controls.append(text)
 					else:
-						img = ft.Container(ft.Text(rl["label"], color=ft.Colors.WHITE), bgcolor=lineColor, width=35,
+						img = ft.Container(ft.Text(rl["label"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
 						                   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
 						contentColumn = ft.Column()

@@ -9,20 +9,20 @@ from settings import *
 def stop_pos_finder(d, curSe):
 	if "platform" in d and curSe["settings"].stops_shown:
 		platformContainer = ft.Container(
-			ft.Text(d["platform"], text_align=ft.TextAlign.CENTER, size=8, color=ft.Colors.ON_SECONDARY_CONTAINER),
+			ft.Text(d["platform"], text_align=ft.TextAlign.CENTER, size=8, color=ft.colors.ON_SECONDARY_CONTAINER),
 			alignment=ft.alignment.center,
 			width=8,
 			height=15,
-			bgcolor=ft.Colors.SECONDARY_CONTAINER
+			bgcolor=ft.colors.SECONDARY_CONTAINER
 		)
 	elif "stopPositionNumber" in d and curSe["settings"].stops_shown:
 		platformContainer = ft.Container(
 			ft.Text(d["stopPositionNumber"], text_align=ft.TextAlign.CENTER, size=8,
-					color=ft.Colors.ON_SECONDARY_CONTAINER),
+			        color=ft.colors.ON_SECONDARY_CONTAINER),
 			alignment=ft.alignment.center,
 			width=8,
 			height=15,
-			bgcolor=ft.Colors.SECONDARY_CONTAINER
+			bgcolor=ft.colors.SECONDARY_CONTAINER
 		)
 	else:
 		platformContainer = ft.Text(" ",
@@ -76,7 +76,7 @@ class MyPage(ft.AnimatedSwitcher):
 				lw = 10
 			else:
 				lw = 40
-				backButton = ft.IconButton(ft.Icons.ARROW_BACK)
+				backButton = ft.IconButton(ft.icons.ARROW_BACK)
 				backButton.on_click = lambda e: self.switch_sub(parent)
 
 			self.parent.parent.appbar = ft.AppBar(
@@ -87,7 +87,7 @@ class MyPage(ft.AnimatedSwitcher):
 				bgcolor="#36618e",
 				color="white",
 				actions=[
-					ft.IconButton(ft.Icons.MORE_VERT, on_click=lambda e, p=self.page: page_settings(p, self.curSe))
+					ft.IconButton(ft.icons.MORE_VERT, on_click=lambda e, p=self.page: page_settings(p, self.curSe))
 				]
 			)
 
@@ -95,7 +95,8 @@ class MyPage(ft.AnimatedSwitcher):
 				self.page.window.close()
 
 			if self.page.platform is not ft.PagePlatform.ANDROID and self.page.platform is not ft.PagePlatform.IOS and self.page.web is False:
-				self.parent.parent.appbar.actions.append(ft.IconButton(ft.Icons.CLOSE, on_click=lambda _e: close_app(_e)))
+				self.parent.parent.appbar.actions.append(
+					ft.IconButton(ft.icons.CLOSE, on_click=lambda _e: close_app(_e)))
 
 			self.page.update()
 

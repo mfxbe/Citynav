@@ -8,7 +8,7 @@ mkdir -p build_tmp/work
 cp *.py build_tmp/
 cp -r locales_data build_tmp/locales_data
 mkdir -p build_tmp/custom
-cp -r custom build_tmp/custom/*.py
+cp -r custom/*.py build_tmp/custom
 cp requirements.txt build_tmp/
 cp -r assets build_tmp
 cd build_tmp || exit

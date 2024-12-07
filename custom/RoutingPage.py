@@ -37,10 +37,10 @@ class RoutingPage(MyPage):
 		startRoutingPage.controls.append(moreRow)
 		timeButtonText = ft.Text(_("Now"), weight=ft.FontWeight.BOLD)
 		timeButton = ft.TextButton(
-			content=ft.Row([ft.Icon(ft.Icons.ACCESS_TIME), timeButtonText], alignment=ft.MainAxisAlignment.CENTER),
+			content=ft.Row([ft.Icon(ft.icons.ACCESS_TIME), timeButtonText], alignment=ft.MainAxisAlignment.CENTER),
 			expand=True)
 		moreRow.controls.append(timeButton)
-		switchButton = ft.TextButton(icon=ft.Icons.SWAP_VERT, expand=True)
+		switchButton = ft.TextButton(icon=ft.icons.SWAP_VERT, expand=True)
 		moreRow.controls.append(switchButton)
 
 		goButton = ft.FilledButton(text=_("Search connections"), expand=True, style=ft.ButtonStyle(color="white"))
@@ -80,11 +80,11 @@ class RoutingPage(MyPage):
 				historyListView.controls = []
 				for e in historyElms:
 					container1 = ft.Text(e["from"])
-					container2 = ft.Icon(ft.Icons.ARROW_FORWARD, color=ft.Colors.ON_SECONDARY_CONTAINER, size=18)
+					container2 = ft.Icon(ft.icons.ARROW_FORWARD, color=ft.colors.ON_SECONDARY_CONTAINER, size=18)
 					container3 = ft.Text(e["to"])
 					container4 = ft.Container(expand=True)
-					container5 = ft.IconButton(selected=e["star"], icon=ft.Icons.STAR_BORDER,
-					                           selected_icon=ft.Icons.STAR, on_click=toggle_star_button)
+					container5 = ft.IconButton(selected=e["star"], icon=ft.icons.STAR_BORDER,
+					                           selected_icon=ft.icons.STAR, on_click=toggle_star_button)
 					container5.d = e
 					containerRow = ft.Row(controls=[container1, container2, container3, container4, container5])
 					historyListView.controls.append(ft.GestureDetector(containerRow, mouse_cursor=ft.MouseCursor.CLICK,
@@ -155,7 +155,7 @@ class RoutingPage(MyPage):
 				if (curSe["positionID"] is not None) and (curSe["position2ID"] is not None): break
 
 			if (curSe["positionID"] is not None) and (curSe["position2ID"] is not None):
-				goButton.content = ft.ProgressRing(width=14, height=14, color=ft.Colors.ON_PRIMARY, stroke_width=2)
+				goButton.content = ft.ProgressRing(width=14, height=14, color=ft.colors.ON_PRIMARY, stroke_width=2)
 				goButton.update()
 
 				# add to history
@@ -220,11 +220,11 @@ class RoutingPage(MyPage):
 
 		sInfo = [
 			ft.Text(curSe["position"], theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
-			ft.Icon(name=ft.Icons.ARROW_FORWARD),
+			ft.Icon(name=ft.icons.ARROW_FORWARD),
 			ft.Text(curSe["position2"], theme_style=ft.TextThemeStyle.TITLE_MEDIUM)
 		]
 		listContainer.controls.append(ft.Container(ft.Row(controls=sInfo, alignment=ft.MainAxisAlignment.CENTER),
-		                                           bgcolor=ft.Colors.OUTLINE_VARIANT, padding=10))
+		                                           bgcolor=ft.colors.OUTLINE_VARIANT, padding=10))
 
 		listview = ft.ListView(padding=10, expand=True)
 		listview.padding = ft.padding.only(top=2)
@@ -293,22 +293,22 @@ class RoutingPage(MyPage):
 				for p in r["parts"]:
 					label = p["line"]["label"]
 					if label == "Fussweg":
-						cont = ft.Container(ft.Icon(ft.Icons.DIRECTIONS_WALK, color=ft.Colors.INVERSE_SURFACE, size=15),
+						cont = ft.Container(ft.Icon(ft.icons.DIRECTIONS_WALK, color=ft.colors.INVERSE_SURFACE, size=15),
 						                    width=35)
 						partLables.controls.append(cont)
 					elif label.startswith("S"):
-						cont = ft.Container(ft.Text(label, color=ft.Colors.WHITE), bgcolor=color_allocator(label),
+						cont = ft.Container(ft.Text(label, color=ft.colors.WHITE), bgcolor=color_allocator(label),
 						                    width=35, alignment=ft.alignment.center, border_radius=10)
 						partLables.controls.append(cont)
 					else:
-						cont = ft.Container(ft.Text(label, color=ft.Colors.WHITE), bgcolor=color_allocator(label),
+						cont = ft.Container(ft.Text(label, color=ft.colors.WHITE), bgcolor=color_allocator(label),
 						                    width=35, alignment=ft.alignment.center)
 						partLables.controls.append(cont)
 
 				timeText = ft.Text("in " + str(rp["timedeltaValue"]) + _(" min."), weight=ft.FontWeight.BOLD,
-				                   color=ft.Colors.PRIMARY)
+				                   color=ft.colors.PRIMARY)
 				if rp["starttimeDelay"] > 0:
-					timeText.color = ft.Colors.RED
+					timeText.color = ft.colors.RED
 				timeText.raw_data = rp["starttime"]
 				entry = ft.Row([
 					ft.Row([
@@ -322,7 +322,7 @@ class RoutingPage(MyPage):
 						           ft.Text(_("Duration: ") + str(rp["traveltimedeltaValue"]) + _(" min."), size=12)],
 						          spacing=2,
 						          horizontal_alignment=ft.CrossAxisAlignment.END),
-						ft.Icon(ft.Icons.ARROW_FORWARD_IOS, color=ft.Colors.INVERSE_SURFACE, size=18)
+						ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)
 					], spacing=5),
 				], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
 				entryContainer = ft.Container(content=entry,
@@ -347,11 +347,11 @@ class RoutingPage(MyPage):
 
 		sInfo = [
 			ft.Text(curSe["position"], theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
-			ft.Icon(name=ft.Icons.ARROW_FORWARD),
+			ft.Icon(name=ft.icons.ARROW_FORWARD),
 			ft.Text(curSe["position2"], theme_style=ft.TextThemeStyle.TITLE_MEDIUM)
 		]
 		listContainer.controls.append(ft.Container(ft.Row(controls=sInfo, alignment=ft.MainAxisAlignment.CENTER),
-		                                           bgcolor=ft.Colors.OUTLINE_VARIANT, padding=10))
+		                                           bgcolor=ft.colors.OUTLINE_VARIANT, padding=10))
 		mColumn = ft.Column(expand=True)
 		listContainer.controls.append(mColumn)
 		mStack = ft.Stack(expand=True)
@@ -359,7 +359,7 @@ class RoutingPage(MyPage):
 		listview = ft.ListView(expand=True, spacing=0)
 		mStack.controls.append(listview)
 
-		ePL = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.Colors.PRIMARY,
+		ePL = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.colors.PRIMARY,
 		                            expanded_header_padding=ft.padding.symmetric(vertical=8.0))
 		listview.controls.append(ePL)
 
@@ -426,7 +426,7 @@ class RoutingPage(MyPage):
 						ft.Text(pData["fromStation"], size=15)
 					], spacing=15),
 					stop_pos_finder(p["from"], curSe),
-					# ft.Row([ft.Icon(ft.Icons.ARROW_FORWARD_IOS, color=ft.Colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
+					# ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
 				], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
 				listview.controls.append(ft.Container(fromStationRow, padding=ft.padding.symmetric(horizontal=10)))
 
@@ -448,9 +448,9 @@ class RoutingPage(MyPage):
 			if pData["line"] == "Fussweg":
 				kmLabel = ft.Text(str(int(p["distance"])) + _(" Meter"))
 				betweenStationLabel = ft.Row([ft.Container(
-					ft.Icon(ft.Icons.DIRECTIONS_WALK, color=ft.Colors.INVERSE_SURFACE, size=15), width=35), kmLabel])
+					ft.Icon(ft.icons.DIRECTIONS_WALK, color=ft.colors.INVERSE_SURFACE, size=15), width=35), kmLabel])
 			else:
-				betweenStationLabel = ft.Container(ft.Text(pData["line"], color=ft.Colors.WHITE, size=14),
+				betweenStationLabel = ft.Container(ft.Text(pData["line"], color=ft.colors.WHITE, size=14),
 				                                   bgcolor=color_allocator(pData["line"]), width=35,
 				                                   alignment=ft.alignment.center)
 
@@ -459,7 +459,7 @@ class RoutingPage(MyPage):
 				affinity=ft.TileAffinity.TRAILING,
 				controls=[ft.Column(controls=betweenStopsList)],
 				expand=True,
-				collapsed_icon_color=ft.Colors.with_opacity(0.0, ft.Colors.PRIMARY)
+				collapsed_icon_color=ft.colors.with_opacity(0.0, ft.colors.PRIMARY)
 			)
 			betweenStationRow = ft.Row([
 				ft.Text("", width=spaceAfterTime),
@@ -491,7 +491,7 @@ class RoutingPage(MyPage):
 					], spacing=15),
 					ft.Column(
 						[stop_pos_finder(p["to"], curSe), stop_pos_finder(rid["parts"][index + 1]["from"], curSe)]),
-					# ft.Row([ft.Icon(ft.Icons.ARROW_FORWARD_IOS, color=ft.Colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
+					# ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5), todo make this button work
 				], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
 				listview.controls.append(ft.Container(toStationRow, padding=ft.padding.symmetric(horizontal=10)))
 			else:
@@ -505,7 +505,7 @@ class RoutingPage(MyPage):
 						ft.Text(pData["toStation"], size=15)
 					], spacing=15),
 					stop_pos_finder(p["to"], curSe),
-					# ft.Row([ft.Icon(ft.Icons.ARROW_FORWARD_IOS, color=ft.Colors.INVERSE_SURFACE, size=18)], spacing=5),  todo make this button work
+					# ft.Row([ft.Icon(ft.icons.ARROW_FORWARD_IOS, color=ft.colors.INVERSE_SURFACE, size=18)], spacing=5),  todo make this button work
 				], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
 				listview.controls.append(ft.Container(toStationRow, padding=ft.padding.symmetric(horizontal=10)))
 
