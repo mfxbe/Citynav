@@ -7,11 +7,11 @@ mkdir -p prepare_tmp
 mkdir -p assets/maps/
 
 #Get maps and convert to images
-wget https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Downloads_2024/2024_layout_SURTX_ZoneM_SCR.pdf -O prepare_tmp/lc.pdf
-wget https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Downloads_2024/2024_layout_SUR_gesamtnetz_SCR.pdf -O prepare_tmp/la.pdf
-wget https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Downloads_2024/A4-Nachtnetz-2024_SCREEN.pdf -O prepare_tmp/nc.pdf
-wget https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/VLP/Verkehrslinienplaene_Muenchen_und_Region/MVV_VLP_STADT_Muenchen.pdf -O prepare_tmp/mc.pdf
-wget https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/VLP/Verkehrslinienplaene_Muenchen_und_Region/MVV_VLP_Region.PDF -O prepare_tmp/ma.pdf
+wget https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Downloads_2025/2025_layout_SURTX_M_SCR.pdf -O prepare_tmp/lc.pdf
+wget https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/Downloads_2025/2025_layout_SUR_M_11_SCR.pdf -O prepare_tmp/la.pdf
+wget https://www.mvg.de/dam/jcr:5126b1a4-7a8d-476f-be80-ca8e7b62d769/A4-Nachtnetz-2025-Web.pdf -O prepare_tmp/nc.pdf
+wget https://prod-redaktion.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/VLP/Verkehrslinienplaene_Muenchen_und_Region/VLP25_Stadt.pdf -O prepare_tmp/mc.pdf
+wget https://prod-redaktion.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/VLP/Verkehrslinienplaene_Muenchen_und_Region/VLP25_Region.pdf -O prepare_tmp/ma.pdf
 
 for file in prepare_tmp/*.pdf; do
     file=${file::-4}
