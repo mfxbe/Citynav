@@ -8,23 +8,30 @@ from locales import _
 def page_settings(page, curSe):
 
 	if page.platform is ft.PagePlatform.IOS or page.platform is ft.PagePlatform.ANDROID:
-		settingsView = ft.View(spacing=10)
-		settingsView.appbar = ft.AppBar(
+		settingsViewConstruct = ft.View(spacing=10)
+		settingsViewConstruct.appbar = ft.AppBar(
 			leading=ft.Text(""),
 			center_title=True,
 			title=ft.Text(_("More")),
-			bgcolor=ft.Colors.PRIMARY,
+			bgcolor="#36618e",
 			color="white",
 			actions=[ft.IconButton(ft.Icons.CLOSE, on_click=lambda e: (page.views.pop(), page.update()))]
 		)
-		page.views.append(settingsView)
+		page.views.append(settingsViewConstruct)
+		settingsView = ft.Column(spacing=10)
+		sVC = ft.Container(settingsView)
+		sVC.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"))
+		settingsViewConstruct.controls.append(sVC)
 	else:
 		settingsView = ft.Column(spacing=10)
+		sVC = ft.Container(settingsView)
+		sVC.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"))
+		sVC.dark_theme = sVC.theme
 		tR = ft.Row([
 			ft.Text(_("More")),
 			ft.IconButton(ft.Icons.CLOSE, on_click=lambda e: page.close(settingsDialog))
 		], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
-		settingsDialog = ft.AlertDialog(title=tR, content=settingsView)
+		settingsDialog = ft.AlertDialog(title=tR, content=sVC)
 		page.open(settingsDialog)
 
 	settingsView.controls.append(ft.Text(_("Preferences"), theme_style=ft.TextThemeStyle.TITLE_MEDIUM))
@@ -74,6 +81,7 @@ def page_settings(page, curSe):
 
 		curSe["settings"].set_key("theme", value)
 		curSe["page"].theme_mode = curSe["settings"].theme  # set theme according to new setting
+		curSe["page"].mainContainer.theme_mode = curSe["settings"].theme  # set theme according to new setting
 		curSe["page"].update()
 
 	colorDropdown = ft.Dropdown(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[

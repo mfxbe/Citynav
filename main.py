@@ -59,19 +59,6 @@ async def main(page: ft.Page):
 	await curSe["settings"].set_up()
 	set_up_locales(page, curSe)
 
-	# Some color fixes and preferences
-	# page.theme_mode = ft.ThemeMode.DARK
-	page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#f8f9ff"),
-						  search_bar_theme=ft.SearchBarTheme(elevation=1),
-						  system_overlay_style=ft.SystemOverlayStyle(status_bar_brightness=ft.Brightness.DARK,
-																	 status_bar_icon_brightness=ft.Brightness.LIGHT))
-	page.dark_theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
-									 text_theme=ft.TextTheme(
-										 title_medium=ft.TextStyle(weight=ft.FontWeight.NORMAL, color="white")),
-									 system_overlay_style=ft.SystemOverlayStyle(
-										 status_bar_brightness=ft.Brightness.DARK,
-										 status_bar_icon_brightness=ft.Brightness.LIGHT))
-
 	# Add navigation to page
 	def view_changer(e):
 		if hasattr(e, "control"):
@@ -165,9 +152,22 @@ async def main(page: ft.Page):
 	mapsPage = MapsPage.MapsPage(curSe)
 	mainContainer = ft.Container(content=routingPage)
 	mainContainer.expand = True
+	page.mainContainer = mainContainer
 	page.padding = 0
 
+	# Some color fixes and preferences
+	# page.theme_mode = ft.ThemeMode.DARK
+	page.mainContainer.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#f8f9ff"),
+	                                    search_bar_theme=ft.SearchBarTheme(elevation=1, bgcolor=ft.colors.BACKGROUND))
+
+	page.mainContainer.dark_theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
+	                                         text_theme=ft.TextTheme(
+		                                         title_medium=ft.TextStyle(weight=ft.FontWeight.NORMAL, color="white")),
+	                                         search_bar_theme=ft.SearchBarTheme(bgcolor="#272a2f"))
+
+
 	# set theme type
+	page.mainContainer.theme_mode = curSe["settings"].theme
 	page.theme_mode = curSe["settings"].theme
 
 	# update page to present
