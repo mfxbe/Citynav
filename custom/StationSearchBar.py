@@ -15,7 +15,6 @@ class StationSearchBar(ft.SearchBar):
 		self.searchPositionButton = searchPositionButton
 
 		self.stations = stations
-		self.bar_bgcolor = ft.colors.ON_TERTIARY
 		self.bar_trailing = [searchPositionButton]
 		self.view_hint_text = _("Haltestelle")
 		self.bar_hint_text = hint

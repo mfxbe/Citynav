@@ -34,9 +34,11 @@ class ReportsPage(MyPage):
 			alignment=ft.alignment.center))
 		self.add_sub("list", ft.ListView([listview], expand=True))
 		self.expand = True
+		self.switch_sub("start")
 
 	def did_mount(self):
 		self.switch_sub("start")
+		self.update()
 		if self.loaded is None or (datetime.now() - self.loaded).total_seconds() > 300:
 			self.update()
 			self.page.run_task(self.load_reports)
