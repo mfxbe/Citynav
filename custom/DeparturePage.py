@@ -197,7 +197,7 @@ class DeparturePage(MyPage):
 				timeText = ft.Text(str(timedeltaValue) + _(" min."), width=55, weight=ft.FontWeight.BOLD)
 				timeText.raw_data = d["realtimeDepartureTime"] / 1000
 
-				if delayTime > 0:
+				if delayTime > 2:
 					timeText.color = ft.Colors.RED
 
 				entry = ft.Row([

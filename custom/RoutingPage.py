@@ -307,7 +307,7 @@ class RoutingPage(MyPage):
 
 				timeText = ft.Text("in " + str(rp["timedeltaValue"]) + _(" min."), weight=ft.FontWeight.BOLD,
 				                   color=ft.Colors.PRIMARY)
-				if rp["starttimeDelay"] > 0:
+				if rp["starttimeDelay"] > 2:
 					timeText.color = ft.Colors.RED
 				timeText.raw_data = rp["starttime"]
 				entry = ft.Row([
