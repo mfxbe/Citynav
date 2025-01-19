@@ -57,7 +57,7 @@ class ReportsPage(MyPage):
 		if self.curSe["page"].web:
 			proxy = "https://dyndns.mfxbe.de/other/citynav/corsproxy/proxy.php?csurl="
 			sReq = Request(
-				proxy + "https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell%2Fbayern&filter=true&channel=REGIONAL&prop=SBAHN&states=BY&authors=S_BAHN_MUC")  # FIXME find a better way around the cors limits
+				proxy + "https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell%2Fbayern%26filter=true%26channel=REGIONAL%26prop=SBAHN%26states=BY%26authors=S_BAHN_MUC")  # FIXME find a better way around the cors limits
 		else:
 			sReq = Request(
 				"https://www.s-bahn-muenchen.de/.rest/verkehrsmeldungen?path=%2Faktuell%2Fbayern&filter=true&channel=REGIONAL&prop=SBAHN&states=BY&authors=S_BAHN_MUC")
