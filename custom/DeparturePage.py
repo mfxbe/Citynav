@@ -43,7 +43,11 @@ class DeparturePage(MyPage):
 			positionSearchBar.value = fromSta
 			positionSearchBar.update()
 
-		historyListView = ft.ListView(controls=[], divider_thickness=1, spacing=5, padding=ft.padding.only(left=10, right=10))
+		historyListView = ft.ListView(controls=[], divider_thickness=1, spacing=5, expand=True)
+
+		if curSe["page"].platform is not ft.PagePlatform.ANDROID and curSe["page"].platform is not ft.PagePlatform.IOS:
+			historyListView.padding = ft.padding.only(left=10, right=10)
+
 		startPage.controls.append(historyListView)
 		def process_history():
 			nonlocal historyElms

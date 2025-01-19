@@ -65,9 +65,11 @@ class RoutingPage(MyPage):
 			fromSearchBar.update()
 			toSearchBar.update()
 
-		historyListView = ft.ListView(controls=[], divider_thickness=1, spacing=5,
-		                              padding=ft.padding.only(left=10, right=10))
+		historyListView = ft.ListView(controls=[], divider_thickness=1, spacing=5, expand=True)
 		startRoutingPage.controls.append(historyListView)
+
+		if curSe["page"].platform is not ft.PagePlatform.ANDROID and curSe["page"].platform is not ft.PagePlatform.IOS:
+			historyListView.padding = ft.padding.only(left=10, right=10)
 
 		def process_history():
 			nonlocal historyElms
