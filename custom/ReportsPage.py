@@ -107,7 +107,9 @@ class ReportsPage(MyPage):
 						                                                      padding=ft.padding.all(15)
 						                                                      )]
 						                                        ),
-						                          content=ft.Container(contentColumn, padding=5,
+						                          content=ft.Container(contentColumn,
+						                                               padding=ft.padding.only(left=5, top=5, right=5,
+						                                                                       bottom=20),
 						                                               alignment=ft.alignment.center_left),
 						                          bgcolor="#ffb800",
 						                          can_tap_header=True)
@@ -148,6 +150,8 @@ class ReportsPage(MyPage):
 			r["description"] = r["description"].replace("<br>", "\n")
 			r["description"] = r["description"].replace("<li>", "\n\t• ")
 			r["description"] = html.unescape(REM_HTAG.sub('', r["description"]))
+			if r["description"][0] == " ":
+				r["description"] = r["description"][1:]
 
 			ol = []
 
@@ -182,7 +186,6 @@ class ReportsPage(MyPage):
 						img = ft.Container(ft.Text(rl["label"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
 						                   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
-						contentColumn = ft.Column()
 						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
 						text = ft.Text(r["description"], color=fontColor, expand=True)
 						contentColumn.controls.append(text)
@@ -195,7 +198,8 @@ class ReportsPage(MyPage):
 							                            padding=ft.padding.all(15)
 							                            )]
 							              ),
-							content=ft.Container(contentColumn, padding=5),
+							content=ft.Container(contentColumn,
+							                     padding=ft.padding.only(left=5, top=5, right=5, bottom=20)),
 							bgcolor=backColor,
 							can_tap_header=True
 						)
