@@ -23,7 +23,7 @@ done
 mv prepare_tmp/* assets/maps/
 
 #Get stop data, parse and save as json string
-wget https://www.mvv-muenchen.de/fileadmin/mediapool/02-Fahrplanauskunft/03-Downloads/openData/Haltestellen_Tarifzonen_Stand_231210.csv -O prepare_tmp/stops.csv
+wget https://www.mvv-muenchen.de/fileadmin/mediapool/02-Fahrplanauskunft/03-Downloads/openData/Haltestellen_Tarifzonen_Stand_241216.csv -O prepare_tmp/stops.csv
 cat prepare_tmp/stops.csv | python -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin, delimiter=";")]))' > prepare_tmp/stops.json
 stops=`cat prepare_tmp/stops.json`
 touch stopsdata.py
