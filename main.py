@@ -158,7 +158,7 @@ async def main(page: ft.Page):
 	# Some color fixes and preferences
 	# page.theme_mode = ft.ThemeMode.DARK
 	page.mainContainer.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#f8f9ff"),
-	                                    search_bar_theme=ft.SearchBarTheme(elevation=1, bgcolor=ft.colors.BACKGROUND))
+	                                    search_bar_theme=ft.SearchBarTheme(elevation=1, bgcolor=ft.Colors.PRIMARY))
 
 	page.mainContainer.dark_theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
 	                                         text_theme=ft.TextTheme(

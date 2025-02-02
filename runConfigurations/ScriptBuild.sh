@@ -8,7 +8,7 @@ mkdir -p build_tmp/work
 cp *.py build_tmp/
 cp -r locales_data build_tmp/locales_data
 mkdir -p build_tmp/custom
-cp -r custom build_tmp/custom/*.py
+cp custom/*.py build_tmp/custom/
 cp requirements.txt build_tmp/
 cp -r assets build_tmp
 cd build_tmp || exit
@@ -28,7 +28,10 @@ if [ -z "$1" ] || [ "$1" == "web" ]
 then
   rm -rf ../builds/web || true
   mkdir -p ../builds/web
-  flet publish main.py -a assets --app-name "Citynav München" --base-url "/$2" --distpath work
+  cp -r assets/* ../builds/web
+  rm -rf assets
+  rm -rf build
+  flet publish main.py --app-name "Citynav München" --base-url "/$2" --distpath work
   mv work/* ../builds/web
   rm ../builds/web/icons/*
   rm ../builds/web/favicon.png
