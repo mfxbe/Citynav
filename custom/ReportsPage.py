@@ -65,6 +65,7 @@ class ReportsPage(MyPage):
 		sBahnReports = json.loads(sBahnResponse.read())
 
 		for r in sBahnReports["disruptions"]:
+			r["text"] = r["summary"] + r["text"]
 			r["text"] = r["text"].replace("<br/>", "\n")
 			r["text"] = r["text"].replace("<br>", "\n")
 			r["text"] = r["text"].replace("<li>", "\n\t• ")
