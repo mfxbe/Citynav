@@ -247,7 +247,8 @@ class RoutingPage(MyPage):
 
 		try:
 			if curSe["jsonData"] is None:
-				response = urlopen("https://www.mvg.de/api/bgw-pt/v3/routes?numberOfConnections=" + str(
+				response = urlopen(
+					"https://www.mvg.de/api/bgw-pt/v3/routes?transportTypes=SCHIFF,RUFTAXI,BAHN,UBAHN,TRAM,SBAHN,BUS,REGIONAL_BUS&numberOfConnections=" + str(
 					resultLimit) + "&originStationGlobalId=" + curSe["positionID"] + "&destinationStationGlobalId=" +
 				                   curSe["position2ID"] + curSe["time"])
 				routes = json.loads(response.read())
@@ -299,7 +300,12 @@ class RoutingPage(MyPage):
 						                    width=35)
 						partLables.controls.append(cont)
 					elif label.startswith("S"):
-						cont = ft.Container(ft.Text(label, color=ft.Colors.WHITE), bgcolor=color_allocator(label),
+						if label.startswith("S8"):
+							c = "#f2c531"
+						else:
+							c = ft.Colors.WHITE
+
+						cont = ft.Container(ft.Text(label, color=c), bgcolor=color_allocator(label),
 						                    width=35, alignment=ft.alignment.center, border_radius=10)
 						partLables.controls.append(cont)
 					else:
