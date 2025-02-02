@@ -91,11 +91,18 @@ class ReportsPage(MyPage):
 						contentColumn.controls.append(text)
 					else:
 						lineColor = color_allocator(l["name"])
-
-						img = ft.Container(ft.Text(l["name"], color=ft.colors.WHITE),
-						                   bgcolor=lineColor, width=35,
-						                   alignment=ft.alignment.center)
+						if l["name"].startswith("S"):
+							if l["name"].startswith("S8"):
+								c = "#f2c531"
+							else:
+								c = ft.colors.WHITE
+							img = ft.Container(ft.Text(l["name"], color=c), bgcolor=lineColor, width=35,
+							                   alignment=ft.alignment.center, border_radius=10)
+						else:
+							img = ft.Container(ft.Text(l["name"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
+							                   alignment=ft.alignment.center)
 						img.margin = ft.margin.only(left=10)
+
 						contentColumn = ft.Column(alignment=ft.alignment.center_left, expand=True)
 						text = ft.Text(r["text"], color="black")
 						contentColumn.controls.append(text)

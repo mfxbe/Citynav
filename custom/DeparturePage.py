@@ -162,7 +162,8 @@ class DeparturePage(MyPage):
 
 		try:
 			response = urlopen(
-				"https://www.mvg.de/api/bgw-pt/v3/departures?limit=" + str(resultLimit) + "&offsetInMinutes=0&globalId=" +
+				"https://www.mvg.de/api/bgw-pt/v3/departures?transportTypes=SCHIFF,RUFTAXI,BAHN,UBAHN,TRAM,SBAHN,BUS,REGIONAL_BUS&limit=" + str(
+					resultLimit) + "&offsetInMinutes=0&globalId=" +
 				curSe[
 					"positionID"])
 			departures = json.loads(response.read())
@@ -193,7 +194,11 @@ class DeparturePage(MyPage):
 
 				lineColor = color_allocator(d["label"])
 				if d["label"].startswith("S"):
-					cont = ft.Container(ft.Text(d["label"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,
+					if d["label"].startswith("S8"):
+						c = "#f2c531"
+					else:
+						c = ft.colors.WHITE
+					cont = ft.Container(ft.Text(d["label"], color=c), bgcolor=lineColor, width=35,
 										alignment=ft.alignment.center, border_radius=10)
 				else:
 					cont = ft.Container(ft.Text(d["label"], color=ft.colors.WHITE), bgcolor=lineColor, width=35,

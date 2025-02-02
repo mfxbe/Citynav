@@ -106,7 +106,7 @@ def color_allocator(line):
 	fixed = {"U1": "#3c7333", "U2": "#c3022d", "U3": "#ed6720", "U4": "#00ab85", "U5": "#bd7b00", "U6": "#0065b0",
 			 "U7": "#c0ba79", "U8": "#c53f09",
 			 "S1": "#0ec1ea", "S2": "#72c042", "S3": "#7c087e", "S4": "#ef1620", "S5": "#046a89", "S6": "#008b50",
-			 "S7": "#973530", "S8": "#000000", "S20": "#f15a74"}
+			 "S7": "#973530", "S8": "#2d2b29", "S20": "#f15a74"}
 
 	if line.isdigit():
 		dLine = int(line)
@@ -123,6 +123,8 @@ def color_allocator(line):
 			color = "#00576a"
 	elif line.startswith("X"):
 		color = "#00576a"
+	elif line.startswith("RB") or line.startswith("RE"):
+		color = "#000000"
 	else:
 		color = "#aeaeaf"
 
