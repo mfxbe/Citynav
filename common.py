@@ -4,7 +4,15 @@ import asyncio
 import flet as ft
 
 from settings import *
+import json
+from urllib.request import urlopen
 
+
+def station_getter(lat, lon):
+	url = "https://www.mvg.de/api/bgw-pt/v3/stations/nearby?latitude=" + lat + "&longitude=" + lon
+	response = urlopen(url)
+	jData = json.loads(response.read())
+	return jData[0]["name"]
 
 def stop_pos_finder(d, curSe):
 	if "platform" in d and curSe["settings"].stops_shown:

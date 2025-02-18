@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # Import flet and systems libraries
 import flet as ft
+import flet_geolocator as fg
 from difflib import SequenceMatcher
+from common import station_getter
 
 from locales import _
 
@@ -13,9 +15,9 @@ class StationSearchBar(ft.SearchBar):
 
 		searchPositionButton = ft.IconButton(icon=ft.Icons.LOCATION_ON_OUTLINED)
 		self.searchPositionButton = searchPositionButton
+		searchPositionButton.on_click = self.get_station_from_pos
 
 		self.stations = stations
-		self.bar_bgcolor = ft.Colors.ON_TERTIARY
 		self.bar_trailing = [searchPositionButton]
 		self.view_hint_text = _("Haltestelle")
 		self.bar_hint_text = hint
@@ -30,6 +32,20 @@ class StationSearchBar(ft.SearchBar):
 			index = index + 1
 			if index >= 30:
 				break
+
+	def get_station_from_pos(self, _b):
+		try:
+			gl = self.page.gl
+			gl.request_permission(15)
+			b = gl.get_current_position(fg.GeolocatorPositionAccuracy.LOW)
+			name = station_getter(str(b.latitude), str(b.longitude))
+			self.value = name
+		except Exception as e:
+			print(e)
+			snBar = ft.SnackBar(ft.Text(f"Error while getting nearest station."))
+			self.page.overlay.append(snBar)
+			snBar.open = True
+		self.page.update()
 
 	def handle_change(self, e):
 		self.lv.controls.clear()

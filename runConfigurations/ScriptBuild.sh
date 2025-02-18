@@ -53,7 +53,7 @@ if [ -z "$1" ] || [ "$1" == "android" ]
 then
   rm -rf ../builds/android || true
   mkdir -p ../builds/android
-  flet build apk --project Citynav --product "Citynav München" --org "de.mfxbe" --exclude "__pypackages__" -o work
+  flet build apk --project Citynav --product "Citynav München" --org "de.mfxbe" --android-permission android.permission.ACCESS_COARSE_LOCATION=True --exclude "__pypackages__" -o work
   mv work/* ../builds/android
 fi
 

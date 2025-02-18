@@ -6,6 +6,7 @@ pyodide_http.patch_all()
 
 # Import flet and systems libraries
 import flet as ft
+import flet_geolocator as fg
 import json
 import os
 from locales import _, set_up_locales
@@ -47,8 +48,15 @@ async def main(page: ft.Page):
 	page.title = "Citynav München"
 	mainView = ft.View(padding=0)
 	page.views.append(mainView)
-	page.udt_running = False # for async process to update times in departure
-	page.urt_running = False # for async process to update times in routing
+	page.udt_running = False  # for async process to update times in departure
+	page.urt_running = False  # for async process to update times in routing
+
+	# show loading roundel
+	mainView.controls = [ft.Row([ft.Column([ft.ProgressRing()],
+	                                       alignment=ft.MainAxisAlignment.CENTER,
+	                                       horizontal_alignment=ft.CrossAxisAlignment.CENTER)], expand=True,
+	                            alignment=ft.MainAxisAlignment.CENTER, vertical_alignment=ft.CrossAxisAlignment.CENTER)]
+	page.update()
 
 	# set basic common data
 	curSe["stops"] = load_stops()  # load stop data
@@ -95,9 +103,9 @@ async def main(page: ft.Page):
 		# navigation for mobile
 		mainView.navigation_bar = ft.NavigationBar(
 			destinations=[ft.NavigationBarDestination(icon=ft.Icons.ROUTE, label=_("Connections")),
-						  ft.NavigationBarDestination(icon=ft.Icons.NEAR_ME, label=_("Departures")),
-						  ft.NavigationBarDestination(icon=ft.Icons.LIST, label=_("Disruptions")),
-						  ft.NavigationBarDestination(icon=ft.Icons.MAP, label=_("Maps"))], selected_index=0,
+			              ft.NavigationBarDestination(icon=ft.Icons.NEAR_ME, label=_("Departures")),
+			              ft.NavigationBarDestination(icon=ft.Icons.LIST, label=_("Disruptions")),
+			              ft.NavigationBarDestination(icon=ft.Icons.MAP, label=_("Maps"))], selected_index=0,
 			on_change=view_changer)
 		nb = mainView.navigation_bar
 	else:
@@ -117,7 +125,8 @@ async def main(page: ft.Page):
 		)
 		nb = mainView.rail
 		if page.web is False:
-			mainView.decoration = ft.BoxDecoration(border=ft.border.all(2, ft.Colors.ON_PRIMARY), border_radius=ft.border_radius.all(2))
+			mainView.decoration = ft.BoxDecoration(border=ft.border.all(2, ft.Colors.ON_PRIMARY),
+			                                       border_radius=ft.border_radius.all(2))
 
 	# make android back button work
 	def on_pop_with_back(eventView):
@@ -158,17 +167,24 @@ async def main(page: ft.Page):
 	# Some color fixes and preferences
 	# page.theme_mode = ft.ThemeMode.DARK
 	page.mainContainer.theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#f8f9ff"),
-	                                    search_bar_theme=ft.SearchBarTheme(elevation=1, bgcolor=ft.Colors.PRIMARY))
+	                                    search_bar_theme=ft.SearchBarTheme(elevation=1, bgcolor=ft.Colors.SURFACE))
 
 	page.mainContainer.dark_theme = ft.Theme(color_scheme=ft.ColorScheme(primary="#36618e", on_tertiary="#272a2f"),
 	                                         text_theme=ft.TextTheme(
 		                                         title_medium=ft.TextStyle(weight=ft.FontWeight.NORMAL, color="white")),
-	                                         search_bar_theme=ft.SearchBarTheme(bgcolor="#272a2f"))
-
+	                                         search_bar_theme=ft.SearchBarTheme(
+		                                         bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST))
 
 	# set theme type
 	page.mainContainer.theme_mode = curSe["settings"].theme
 	page.theme_mode = curSe["settings"].theme
+
+	# add geolocator
+	gl = fg.Geolocator(location_settings=fg.GeolocatorSettings(accuracy=fg.GeolocatorPositionAccuracy.LOW))
+	page.overlay.append(gl)
+	page.gl = gl
+	curSe["gl"] = gl
+	page.update()
 
 	# update page to present
 	mainView.controls = [mainContainer]
