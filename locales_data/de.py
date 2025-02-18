@@ -53,5 +53,6 @@ data = {
 	"Maps": "Netzpläne",
 	"before ": "vor ",
 	"in ": "in ",
+	", you can use, share and change it. You\nare also welcome to support the development.": ", du kannst sie nutzen, teilen und verändern. Außerdem\nkannst du gerne die Entwicklung unterstützen.",
 
 }

@@ -53,5 +53,5 @@ data = {
 	"Maps": "Carta",
 	"before ": "fa ",
 	"in ": "in ",
-
+	", you can use, share and change it. You\nare also welcome to support the development.": "che può essere utilizzato, condiviso e modificato. Siete\ninoltre invitati a sostenere lo sviluppo.",
 }

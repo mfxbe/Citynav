@@ -151,7 +151,7 @@ def page_settings(page, curSe):
 		ft.TextSpan("Citynav München " + _("is ")),
 		ft.TextSpan(_("free software"), style=ft.TextStyle(italic=True)),
 		ft.TextSpan(
-			"...")
+			_(", you can use, share and change it. You\nare also welcome to support the development."))
 	]))
 	donateURI = "https://liberapay.com/mfxbe/donate"
 	settingsView.controls.append(ft.Row([
@@ -166,7 +166,7 @@ def page_settings(page, curSe):
 		ft.TextSpan(".")
 	]))
 
-	settingsView.controls.append(ft.Divider())
+	# settingsView.controls.append(ft.Divider())
 	settingsView.controls.append(
 		ft.Container(ft.Text("Citynav München 0.1.0 © 2024 Manuel Ehrmanntraut", size=8, weight=ft.FontWeight.W_300),
 					 alignment=ft.alignment.center))
