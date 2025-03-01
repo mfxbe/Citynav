@@ -52,7 +52,7 @@ def page_settings(page, curSe):
 		snBar.open = True
 		curSe["page"].update()
 
-	languageDropdown = ft.Dropdown(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[
+	languageDropdown = ft.DropdownM2(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[
 		ft.dropdown.Option("Deutsch"),
 		ft.dropdown.Option("English"),
 		ft.dropdown.Option("Italiano")
@@ -84,7 +84,7 @@ def page_settings(page, curSe):
 		curSe["page"].mainContainer.theme_mode = curSe["settings"].theme  # set theme according to new setting
 		curSe["page"].update()
 
-	colorDropdown = ft.Dropdown(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[
+	colorDropdown = ft.DropdownM2(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[
 		ft.dropdown.Option(_("Automatic")),
 		ft.dropdown.Option(_("Light")),
 		ft.dropdown.Option(_("Dark")),
@@ -154,11 +154,11 @@ def page_settings(page, curSe):
 			_(", you can use, share and change it. You\nare also welcome to support the development."))
 	]))
 	donateURI = "https://liberapay.com/mfxbe/donate"
-	settingsView.controls.append(ft.Row([
-		ft.Container(ft.Image(src="other/donate_de.png"), height=32, url=donateURI, url_target=ft.UrlTarget.BLANK),
-		ft.Container(ft.Image(src="other/github_de.png"), height=32, url="https://github.com/mfxbe/Citynav",
-					 url_target=ft.UrlTarget.BLANK)
-	], alignment=ft.MainAxisAlignment.CENTER))
+	# settingsView.controls.append(ft.Row([
+	#	ft.Container(ft.Image(src="other/donate_de.png"), height=32, url=donateURI, url_target=ft.UrlTarget.BLANK),
+	#	ft.Container(ft.Image(src="other/github_de.png"), height=32, url="https://github.com/mfxbe/Citynav",
+	#				 url_target=ft.UrlTarget.BLANK)
+	# ], alignment=ft.MainAxisAlignment.CENTER))
 	settingsView.controls.append(ft.Text(spans=[
 		ft.TextSpan(_("To find out more about the public software licence, ")),
 		ft.TextSpan(_("click here"), url="https://github.com/mfxbe/Citynav/blob/master/LICENSE.md", url_target=ft.UrlTarget.BLANK,
