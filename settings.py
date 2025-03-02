@@ -125,6 +125,28 @@ def page_settings(page, curSe):
 	settingsView.controls.append(
 		ft.Row([ft.Text(_("Results")), resultSlider], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
 
+	# colors
+	def messages_dropdown_changed(e):
+		if e.control.value == _("Current"):
+			value = "current"
+		else:
+			value = "all"
+
+		curSe["settings"].set_key("messages_show", value)
+
+	messagesDropdown = ft.DropdownM2(width=180, height=30, content_padding=ft.padding.only(right=1, left=10), options=[
+		ft.dropdown.Option(_("Current")),
+		ft.dropdown.Option(_("All")),
+	], value=_("Current"))
+
+	if curSe["settings"].messages_show == "all":
+		messagesDropdown.value = _("All")
+
+	settingsView.controls.append(
+		ft.Row([ft.Text(_("Reports in connections")), messagesDropdown], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
+	messagesDropdown.on_change = messages_dropdown_changed
+
+	# more
 	def stop_checkbox_changed(e):
 		if e.data == "true":
 			curSe["settings"].set_key("stops_shown", True)

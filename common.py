@@ -153,6 +153,7 @@ class StorageHandler():
 		self.default = 0
 		self.language = "unset"
 		self.stops_shown = False
+		self.messages_show = "current"
 
 	async def set_up(self):
 		# Set defaults
@@ -165,6 +166,7 @@ class StorageHandler():
 			self.default = await self.set_from_storage("default", 0)
 			self.language = await self.set_from_storage("language", "unset")
 			self.stops_shown = await self.set_from_storage("stops_shown", False)
+			self.messages_show = await self.set_from_storage("messages_show", "current")
 		except Exception as e:
 			print(e)
 			snBar = ft.SnackBar(ft.Text(f"Fehler beim Setzten von Nutzereinstellungen"))

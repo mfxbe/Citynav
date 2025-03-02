@@ -412,16 +412,25 @@ class RoutingPage(MyPage):
 			else:
 				delayHintNext = "     "
 
-			if pData["line"] in self.curSe["rps"]:
-				msg = self.curSe["rps"][pData["line"]]
-				msgCopy = copy.deepcopy(msg)
+			if curSe["settings"].messages_show == "current":
+				# remove non disruption-type messages if choosen so in settings (default)
+				if pData["line"] in self.curSe["rps"]:
+					msg = self.curSe["rps"][pData["line"]]
+					msg.expanded = False
+					msgCopy = copy.deepcopy(msg)
 
-				# remove non disruption-type messages
-				newC = [elm for elm in msgCopy.content.content.controls if hasattr(elm, "myIsCurrent")]
-				msgCopy.content.content.controls = newC
-				msgCopy.content.content.controls.append(ft.Container(expand=True))
+					newC = [elm for elm in msgCopy.content.content.controls if hasattr(elm, "myIsCurrent")]
+					msgCopy.content.content.controls = newC
+					msgCopy.content.content.controls.append(ft.Container(expand=True))
 
-				ePL.controls.insert(1, msgCopy)
+					ePL.controls.insert(1, msgCopy)
+			else:
+				if pData["line"] in self.curSe["rps_all"]:
+					msg = self.curSe["rps_all"][pData["line"]]
+					msg.expanded = False
+					msgCopy = copy.deepcopy(msg)
+					msgCopy.content.content.controls.append(ft.Container(expand=True))
+					ePL.controls.insert(1, msgCopy)
 
 			if index == 0:
 				fromStationBorder = ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"])),

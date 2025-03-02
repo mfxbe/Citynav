@@ -23,6 +23,7 @@ class ReportsPage(MyPage):
 		self.curSe = curSe
 		self.loaded = None
 		self.curSe["rps"] = dict()
+		self.curSe["rps_all"] = dict()
 
 		listview = ft.ExpansionPanelList(expand=True, elevation=0, expand_icon_color=ft.Colors.PRIMARY,
 		                                 expanded_header_padding=ft.padding.symmetric(vertical=8.0))
@@ -126,6 +127,7 @@ class ReportsPage(MyPage):
 
 						con[l["name"]] = contentColumn
 						self.curSe["rps"][l["name"]] = entry
+						self.curSe["rps_all"][l["name"]] = entry
 
 					text.myIsCurrent = True
 				else:
@@ -214,9 +216,21 @@ class ReportsPage(MyPage):
 						self.listview.controls.append(entry)
 						con[rl["label"]] = contentColumn
 
-						if r["type"] == "INCIDENT":
+						timeCalcRes = False
+						# TODO: Bring in some more incident like cases that are not noted as incidents in (some first tries below)
+						# if "to" in r["incidentDurations"][0]:
+						# 	now_timestamp = int(datetime.utcnow().timestamp())
+						# 	if r["incidentDurations"][0]["from"]/1000 <= now_timestamp <= r["incidentDurations"][0]["to"]/1000:
+						# 		timeCalcRes = True
+						# 		print("jes")
+						# 	else:
+						# 		print("no" + rl["label"])
+
+						if r["type"] == "INCIDENT" or (r["type"] == "SCHEDULE_CHANGE" and timeCalcRes == True):
 							text.myIsCurrent = True
 							self.curSe["rps"][rl["label"]] = entry
 							p = len(self.listview.controls)
+
+						self.curSe["rps_all"][rl["label"]] = entry
 
 		self.switch_sub("list")
