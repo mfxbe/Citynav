@@ -123,6 +123,8 @@ def color_allocator(line):
 			color = "#00576a"
 	elif line in fixed:
 		color = fixed[line]
+	elif line[:2] in fixed:
+		color = fixed[line[:2]]
 	elif line.startswith("N"):
 		if int(line.replace("N", "")) < 40:
 			color = "#d91a1a"

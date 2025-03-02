@@ -197,10 +197,10 @@ class DeparturePage(MyPage):
 						c = "#f2c531"
 					else:
 						c = ft.Colors.WHITE
-					cont = ft.Container(ft.Text(d["label"], color=c), bgcolor=lineColor, width=35,
+					cont = ft.Container(ft.Text(d["label"][:4], color=c), bgcolor=lineColor, width=35,
 										alignment=ft.alignment.center, border_radius=10)
 				else:
-					cont = ft.Container(ft.Text(d["label"], color=ft.Colors.WHITE), bgcolor=lineColor, width=35,
+					cont = ft.Container(ft.Text(d["label"][:4], color=ft.Colors.WHITE), bgcolor=lineColor, width=35,
 										alignment=ft.alignment.center)
 
 				timeText = ft.Text(str(timedeltaValue) + _(" min."), width=55, weight=ft.FontWeight.BOLD)

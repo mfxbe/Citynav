@@ -305,11 +305,11 @@ class RoutingPage(MyPage):
 						else:
 							c = ft.Colors.WHITE
 
-						cont = ft.Container(ft.Text(label, color=c), bgcolor=color_allocator(label),
+						cont = ft.Container(ft.Text(label[:4], color=c), bgcolor=color_allocator(label),
 						                    width=35, alignment=ft.alignment.center, border_radius=10)
 						partLables.controls.append(cont)
 					else:
-						cont = ft.Container(ft.Text(label, color=ft.Colors.WHITE), bgcolor=color_allocator(label),
+						cont = ft.Container(ft.Text(label[:4], color=ft.Colors.WHITE), bgcolor=color_allocator(label),
 						                    width=35, alignment=ft.alignment.center)
 						partLables.controls.append(cont)
 
@@ -458,7 +458,7 @@ class RoutingPage(MyPage):
 				betweenStationLabel = ft.Row([ft.Container(
 					ft.Icon(ft.Icons.DIRECTIONS_WALK, color=ft.Colors.INVERSE_SURFACE, size=15), width=35), kmLabel])
 			else:
-				betweenStationLabel = ft.Container(ft.Text(pData["line"], color=ft.Colors.WHITE, size=14),
+				betweenStationLabel = ft.Container(ft.Text(pData["line"][:4], color=ft.Colors.WHITE, size=14),
 				                                   bgcolor=color_allocator(pData["line"]), width=35,
 				                                   alignment=ft.alignment.center)
 
