@@ -13,7 +13,8 @@ Citynav München is still in the early stages of development, please use it with
 
 | Depature view on desktop in light mode | Route searching on mobile in dark mode |
 |---|---|
-| ![20250308_19h30m02s_grim](https://github.com/user-attachments/assets/53caf9bf-b410-4402-8ea7-fd467d94353d) | todo |
+| ![20250308_19h30m02s_grim](https://github.com/user-attachments/assets/53caf9bf-b410-4402-8ea7-fd467d94353d) | ![1024-1820](https://github.com/user-attachments/assets/f05fb746-578c-4619-a7a9-69f48a71708c)
+ |
 
 
 ### Install
