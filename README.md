@@ -16,6 +16,10 @@ Citynav München is still in the early stages of development, please use it with
 | ![20250308_19h30m02s_grim](https://github.com/user-attachments/assets/53caf9bf-b410-4402-8ea7-fd467d94353d) | todo |
 
 
+### Install
+
+See [releases](https://github.com/mfxbe/Citynav/releases) for the latest version. Remeber that Citynav is still work in process.
+
 
 ### Note
 
