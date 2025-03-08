@@ -12,7 +12,7 @@ import flet as ft
 # Import other parts of this app
 from locales import _
 from custom import StationSearchBar
-from common import MyPage, color_allocator, stop_pos_finder
+from common import MyPage, color_allocator, stop_pos_finder, name_shorter
 
 
 class RoutingPage(MyPage):
@@ -81,9 +81,9 @@ class RoutingPage(MyPage):
 				curSe["settings"].set_key("connection_history", json.dumps(historyElms, ensure_ascii=False))
 				historyListView.controls = []
 				for e in historyElms:
-					container1 = ft.Text(e["from"])
+					container1 = ft.Text(name_shorter(e["from"]))
 					container2 = ft.Icon(ft.Icons.ARROW_FORWARD, color=ft.Colors.ON_SECONDARY_CONTAINER, size=18)
-					container3 = ft.Text(e["to"])
+					container3 = ft.Text(name_shorter(e["to"]))
 					container4 = ft.Container(expand=True)
 					container5 = ft.IconButton(selected=e["star"], icon=ft.Icons.STAR_BORDER,
 					                           selected_icon=ft.Icons.STAR, on_click=toggle_star_button)

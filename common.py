@@ -8,6 +8,11 @@ import json
 from urllib.request import urlopen
 
 
+def name_shorter(text):
+	if len(text) > 25:
+		text = text[:22] + "..."
+	return text
+
 def station_getter(lat, lon):
 	url = "https://www.mvg.de/api/bgw-pt/v3/stations/nearby?latitude=" + lat + "&longitude=" + lon
 	response = urlopen(url)
