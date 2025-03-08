@@ -80,6 +80,8 @@ class ReportsPage(MyPage):
 				continue
 
 			for l in r["lines"]:
+				if l["name"] == "":
+					l["name"] = "SEV"
 				l["name"] = l["name"].replace(" ", "")
 
 				if l["property"] == "SBAHN":
@@ -173,6 +175,8 @@ class ReportsPage(MyPage):
 					continue
 
 				if r["description"] + rl["label"] not in ol:
+					if rl["label"] == "":
+						rl["label"] = "SEV"
 					ol.append(r["description"] + rl["label"])
 					lineColor = color_allocator(rl["label"])
 

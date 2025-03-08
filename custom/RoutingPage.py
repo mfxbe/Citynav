@@ -295,9 +295,19 @@ class RoutingPage(MyPage):
 				partLables = ft.Row(spacing=5)
 				for p in r["parts"]:
 					label = p["line"]["label"]
+
+					if label == "" or p["line"]["sev"] == True:
+						label = "SEV"  # todo: show line number of sev if it exists (needs changes in color_allocator)
+
 					if label == "Fussweg":
 						cont = ft.Container(ft.Icon(ft.Icons.DIRECTIONS_WALK, color=ft.Colors.INVERSE_SURFACE, size=15),
 						                    width=35)
+						partLables.controls.append(cont)
+					elif label == "SEV":
+						cont = ft.Container(ft.Text(label[:4], color=ft.Colors.WHITE, no_wrap=True),
+						                    bgcolor="transparent",
+						                    width=35, alignment=ft.alignment.center,
+						                    image=ft.DecorationImage(src="sev_hexagon.png", fit=ft.ImageFit.FILL))
 						partLables.controls.append(cont)
 					elif label.startswith("S"):
 						if label.startswith("S8"):
@@ -380,6 +390,8 @@ class RoutingPage(MyPage):
 			pData["fromStation"] = p["from"]["name"]
 			pData["fromTime"] = datetime.strptime(p["from"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
 			pData["line"] = p["line"]["label"]
+			if pData["line"] == "" or p["line"]["sev"] == True:
+				pData["line"] = "SEV"
 			pData["lineDestination"] = p["line"]["destination"]
 			pData["toStation"] = p["to"]["name"]
 			pData["toTime"] = datetime.strptime(p["to"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
@@ -467,6 +479,22 @@ class RoutingPage(MyPage):
 				kmLabel = ft.Text(str(int(p["distance"])) + _(" Meter"))
 				betweenStationLabel = ft.Row([ft.Container(
 					ft.Icon(ft.Icons.DIRECTIONS_WALK, color=ft.Colors.INVERSE_SURFACE, size=15), width=35), kmLabel])
+			elif pData["line"] == "SEV":
+				betweenStationLabel = ft.Container(
+					ft.Text(pData["line"][:4], color=ft.Colors.WHITE, size=14, no_wrap=True),
+					bgcolor="transparent", width=35,
+					alignment=ft.alignment.center,
+					image=ft.DecorationImage(src="sev_hexagon.png", fit=ft.ImageFit.FILL))
+			elif pData["line"].startswith("S"):
+				if pData["line"].startswith("S8"):
+					c = "#f2c531"
+				else:
+					c = ft.Colors.WHITE
+
+				betweenStationLabel = ft.Container(
+					ft.Text(pData["line"][:4], color=c, size=14, no_wrap=True),
+					bgcolor=color_allocator(pData["line"]), width=35,
+					alignment=ft.alignment.center, border_radius=10)
 			else:
 				betweenStationLabel = ft.Container(
 					ft.Text(pData["line"][:4], color=ft.Colors.WHITE, size=14, no_wrap=True),
@@ -490,9 +518,12 @@ class RoutingPage(MyPage):
 			if index != len(rid["parts"]) - 1:
 				toStationBorderTop = ft.border.only(left=ft.border.BorderSide(4, color_allocator(pData["line"])),
 				                                    bottom=ft.border.BorderSide(4, color_allocator(pData["line"])))
+				nextLine = rid["parts"][index + 1]["line"]["label"]
+				if nextLine == "" or rid["parts"][index + 1]["line"]["sev"] == True:
+					nextLine = "SEV"
 				toStationBorderBottom = ft.border.only(
-					left=ft.border.BorderSide(4, color_allocator(rid["parts"][index + 1]["line"]["label"])),
-					top=ft.border.BorderSide(4, color_allocator(rid["parts"][index + 1]["line"]["label"])))
+					left=ft.border.BorderSide(4, color_allocator(nextLine)),
+					top=ft.border.BorderSide(4, color_allocator(nextLine)))
 				nextStationTime = datetime.strptime(rid["parts"][index + 1]["from"]["plannedDeparture"][:-6],
 				                                    "%Y-%m-%dT%H:%M:%S")
 
