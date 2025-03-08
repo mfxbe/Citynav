@@ -17,7 +17,8 @@ def station_getter(lat, lon):
 def stop_pos_finder(d, curSe):
 	if "platform" in d and curSe["settings"].stops_shown:
 		platformContainer = ft.Container(
-			ft.Text(d["platform"], text_align=ft.TextAlign.CENTER, size=8, color=ft.Colors.ON_SECONDARY_CONTAINER),
+			ft.Text(d["platform"], text_align=ft.TextAlign.CENTER, size=8, color=ft.Colors.ON_SECONDARY_CONTAINER,
+			        no_wrap=True),
 			alignment=ft.alignment.center,
 			width=8,
 			height=15,
@@ -26,7 +27,7 @@ def stop_pos_finder(d, curSe):
 	elif "stopPositionNumber" in d and curSe["settings"].stops_shown:
 		platformContainer = ft.Container(
 			ft.Text(d["stopPositionNumber"], text_align=ft.TextAlign.CENTER, size=8,
-					color=ft.Colors.ON_SECONDARY_CONTAINER),
+			        color=ft.Colors.ON_SECONDARY_CONTAINER, no_wrap=True),
 			alignment=ft.alignment.center,
 			width=8,
 			height=15,
