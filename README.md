@@ -23,4 +23,4 @@ See [releases](https://github.com/mfxbe/Citynav/releases) for the latest version
 
 ### Note
 
-This is a private project and is in no way affiliated with MVG, MVV or similar institutions.
+This is a private project and is in no way affiliated with MVG, MVV or similar organisations.
