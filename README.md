@@ -18,7 +18,7 @@ Citynav München is still in the early stages of development, please use it with
 
 ### Install
 
-See [releases](https://github.com/mfxbe/Citynav/releases) for the latest version. Remeber that Citynav is still work in process.
+See [releases](https://github.com/mfxbe/Citynav/releases) for the latest version and a custom F-Froid repo for Android can be found [here](https://dyndns.mfxbe.de/other/citynav/fdroid/repo/). Remeber that Citynav is still work in process.
 
 
 ### Note
