@@ -33,7 +33,12 @@ class StationSearchBar(ft.SearchBar):
 			if index >= 30:
 				break
 
-	def get_station_from_pos(self, _b):
+	def get_station_from_pos(self, event):
+		p = event.control.parent
+		trail = p.bar_trailing.copy()
+		p.bar_trailing = [ft.ProgressRing(width=10, height=10, stroke_width=2)]
+		p.update()
+
 		try:
 			gl = self.page.gl
 			gl.request_permission(15)
@@ -45,6 +50,8 @@ class StationSearchBar(ft.SearchBar):
 			snBar = ft.SnackBar(ft.Text(f"Error while getting nearest station."))
 			self.page.overlay.append(snBar)
 			snBar.open = True
+
+		p.bar_trailing = trail
 		self.page.update()
 
 	def handle_change(self, e):
