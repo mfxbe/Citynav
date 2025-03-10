@@ -291,7 +291,10 @@ class RoutingPage(MyPage):
 				rp["traveltimedeltaValue"] = round((rp["endtime"] - rp["starttime"]).total_seconds() / 60) + rp[
 					"starttimeDelay"]
 
-				if rp["timedeltaValue"] < 0: continue
+				# if rp["timedeltaValue"] < 0: continue #todo: maybe bring this back (see next lines)
+				# this did remove all results before time(now) its nice to have when using while traveling in this moment
+				# to not get results you cant use but this also made it impossible to lookup for trains early that day
+				# but this sometimes can be usefull
 
 				partLables = ft.Row(spacing=5)
 				for p in r["parts"]:
@@ -325,8 +328,13 @@ class RoutingPage(MyPage):
 						                    width=35, alignment=ft.alignment.center)
 						partLables.controls.append(cont)
 
-				timeText = ft.Text("in " + str(rp["timedeltaValue"]) + _(" min."), weight=ft.FontWeight.BOLD,
-				                   color=ft.Colors.PRIMARY)
+				if rp["timedeltaValue"] >= 0:
+					timeText = ft.Text("in " + str(rp["timedeltaValue"]) + _(" min."), weight=ft.FontWeight.BOLD,
+					                   color=ft.Colors.PRIMARY)
+				else:
+					timeText = ft.Text(_("before ") + str(rp["timedeltaValue"] * -1) + _(" min."),
+					                   weight=ft.FontWeight.BOLD,
+					                   color=ft.Colors.PRIMARY)
 				if rp["starttimeDelay"] > 2:
 					timeText.color = ft.Colors.RED
 				timeText.raw_data = rp["starttime"]
