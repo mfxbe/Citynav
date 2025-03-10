@@ -131,7 +131,8 @@ class RoutingPage(MyPage):
 			curSe["page"].close(timeDialog)
 
 		def choose_time(_e):
-			timePicker = ft.CupertinoDatePicker(date_picker_mode=ft.CupertinoDatePickerMode.TIME, use_24h_format=True)
+			timePicker = ft.CupertinoDatePicker(date_picker_mode=ft.CupertinoDatePickerMode.TIME, use_24h_format=True,
+			                                    value=datetime.now())
 			tomorrowCheckbox = ft.Checkbox(label="Morgen", value=False)
 			timeDialog = ft.AlertDialog(title=ft.Text(_("Choose departure time")),
 			                            content=ft.Column([ft.Container(timePicker, height=100), tomorrowCheckbox],
