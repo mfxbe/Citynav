@@ -3,7 +3,7 @@
 
 ### About
 
-A public transport app for Munich. Available for Android, Linux and Web (PWA). Heavily inspired by the late MVG Fahrinfo.
+A public transport app for Munich. Available for Android, Linux and Web (PWA). Heavily inspired by the deprecated and discontinued MVG Fahrinfo.
 
 Citynav München is still in the early stages of development, please use it with caution.
 
