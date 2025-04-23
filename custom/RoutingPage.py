@@ -213,13 +213,19 @@ class RoutingPage(MyPage):
 				listview.update()
 				if not self.page.udt_running: break
 
-	def display_list_page(self):
+	def display_list_page(self, startTime="unset"):
 		curSe = self.curSe
 		listContainer = ft.Column(expand=True, spacing=0)
 		listContainer.expand = True
 		self.listPage.controls.clear()
 		self.listPage.controls.append(listContainer)
 		self.listPage.expand = True
+
+		if startTime == "unset":
+			startTime = curSe["time"]
+
+		if startTime == " " or startTime == "":
+			startTime = datetime.now().astimezone(timezone.utc).strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
 
 		sInfo = [
 			ft.Text(curSe["position"], theme_style=ft.TextThemeStyle.TITLE_MEDIUM),
@@ -232,6 +238,24 @@ class RoutingPage(MyPage):
 		listview = ft.ListView(padding=10, expand=True)
 		listview.padding = ft.padding.only(top=2)
 		listContainer.controls.append(listview)
+
+		# Button to show earlier connections
+		earlierButton = ft.TextButton(_("Earlier"))
+		listview.controls.append(earlierButton)
+		listview.controls.append(ft.Divider(thickness=1, height=1))
+
+		od = datetime.strptime(startTime + "TZ+0000", '&routingDateTime=%Y-%m-%dT%H:%M:00.000Z' + 'TZ%z')
+		od = od - timedelta(hours=0, minutes=30)
+		nd = od.astimezone(timezone.utc).strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
+
+		def earlier_button_click(_s):
+			earlierButton.content = ft.ProgressRing(width=14, height=14, color=ft.Colors.PRIMARY, stroke_width=2)
+			earlierButton.update()
+			self.display_list_page(nd)
+
+		earlierButton.on_click = earlier_button_click
+
+		# end button
 
 		def animate(_d, rid, tid):
 			curSe["jsonData"] = rid
@@ -251,7 +275,7 @@ class RoutingPage(MyPage):
 				response = urlopen(
 					"https://www.mvg.de/api/bgw-pt/v3/routes?transportTypes=SCHIFF,RUFTAXI,BAHN,UBAHN,TRAM,SBAHN,BUS,REGIONAL_BUS&numberOfConnections=" + str(
 					resultLimit) + "&originStationGlobalId=" + curSe["positionID"] + "&destinationStationGlobalId=" +
-				                   curSe["position2ID"] + curSe["time"])
+					curSe["position2ID"] + startTime)
 				routes = json.loads(response.read())
 				curSe["routes"] = routes
 			else:
@@ -362,7 +386,26 @@ class RoutingPage(MyPage):
 				listview.controls.append(entryContainer)
 				listview.controls.append(ft.Divider(thickness=1, height=1))
 
+		# Button to show later connections
+		laterButton = ft.TextButton(_("Later"))
+		listview.controls.append(laterButton)
+		listview.controls.append(ft.Divider(thickness=1, height=1))
+
+		odp = datetime.strptime(startTime + "TZ+0000", '&routingDateTime=%Y-%m-%dT%H:%M:00.000Z' + 'TZ%z')
+		odp = odp + timedelta(hours=0, minutes=30)
+		nd2 = odp.astimezone(timezone.utc).strftime("&routingDateTime=%Y-%m-%dT%H:%M:00.000Z")
+
+		def later_button_click(_s):
+			laterButton.content = ft.ProgressRing(width=14, height=14, color=ft.Colors.PRIMARY, stroke_width=2)
+			laterButton.update()
+			self.display_list_page(nd2)
+
+		laterButton.on_click = later_button_click
+		# --- end button)
+
 		self.switch_sub("listPage")
+		self.update()
+		listview.scroll_to(offset=35, duration=0)  # scroll a bit to have earlierButton "hidden"
 		self.page.run_task(self.update_results_time, listview)
 
 	def display_result_page(self):
