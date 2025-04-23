@@ -162,7 +162,10 @@ class ReportsPage(MyPage):
 			r["description"] = r["description"].replace("<br>", "\n")
 			r["description"] = r["description"].replace("<li>", "\n\t• ")
 			r["description"] = html.unescape(REM_HTAG.sub('', r["description"]))
-			if r["description"][0] == " ":
+
+			if r["description"] == "":
+				r["description"] = "Keine Details angegeben."
+			elif r["description"][0] == " ":
 				r["description"] = r["description"][1:]
 
 			ol = []
@@ -171,7 +174,8 @@ class ReportsPage(MyPage):
 
 				# sort out line numbers bigger than 200 (buses outside of munich) there are so many reports there
 				# so this is for a better overview. In future todo: a setting to enable if needed
-				if int(re.sub(r'\D', '', rl["label"])) >= 200:
+				lnNumber = re.sub(r'\D', '', rl["label"])
+				if lnNumber is not "" and int(lnNumber) >= 200:
 					continue
 
 				if r["description"] + rl["label"] not in ol:
