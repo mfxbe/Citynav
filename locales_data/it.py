@@ -54,4 +54,6 @@ data = {
 	"before ": "fa ",
 	"in ": "in ",
 	", you can use, share and change it. You\nare also welcome to support the development.": "che può essere utilizzato, condiviso e modificato. Siete\ninoltre invitati a sostenere lo sviluppo.",
+	"Error while getting nearest station.": "Errore durante la ricerca della stazione più vicina.",
+	"No details provided.": "Non ci sono dettagli.",
 }

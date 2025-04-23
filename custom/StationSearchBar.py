@@ -47,7 +47,7 @@ class StationSearchBar(ft.SearchBar):
 			self.value = name
 		except Exception as e:
 			print(e)
-			snBar = ft.SnackBar(ft.Text(f"Error while getting nearest station."))
+			snBar = ft.SnackBar(ft.Text(_("Error while getting nearest station.")))
 			self.page.overlay.append(snBar)
 			snBar.open = True
 

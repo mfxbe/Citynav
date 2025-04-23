@@ -164,7 +164,7 @@ class ReportsPage(MyPage):
 			r["description"] = html.unescape(REM_HTAG.sub('', r["description"]))
 
 			if r["description"] == "":
-				r["description"] = "Keine Details angegeben."
+				r["description"] = _("No details provided.")
 			elif r["description"][0] == " ":
 				r["description"] = r["description"][1:]
 

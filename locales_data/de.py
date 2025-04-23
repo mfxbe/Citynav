@@ -54,5 +54,7 @@ data = {
 	"before ": "vor ",
 	"in ": "in ",
 	", you can use, share and change it. You\nare also welcome to support the development.": ", du kannst sie nutzen, teilen und verändern. Außerdem\nkannst du gerne die Entwicklung unterstützen.",
+	"Error while getting nearest station.": "Fehler beim Suchen der nächsten Haltestelle.",
+	"No details provided.": "Keine Details angegeben.",
 
 }
