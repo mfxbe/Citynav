@@ -65,8 +65,23 @@ class DeparturePage(MyPage):
 					container5 = ft.IconButton(selected=e["star"], icon=ft.Icons.STAR_BORDER, selected_icon=ft.Icons.STAR, on_click=toggle_star_button)
 					container5.d = e
 					containerRow = ft.Row(controls=[container1,  container4, container5])
-					historyListView.controls.append(ft.GestureDetector(containerRow, mouse_cursor=ft.MouseCursor.CLICK, on_tap=(lambda _d, f=e: (history_clicked(f["station"])))))
+					rowWithGest = ft.GestureDetector(containerRow, mouse_cursor=ft.MouseCursor.CLICK,
+					                                 on_tap=(lambda _d, f=e: (history_clicked(f["station"]))))
+					historyListView.controls.append(ft.Dismissible(content=rowWithGest,
+					                                               secondary_background=ft.Container(
+						                                               bgcolor=ft.Colors.RED),
+					                                               dismiss_direction=ft.DismissDirection.END_TO_START,
+					                                               on_dismiss=lambda _z, f=e: rm_from_history(f)))
 		process_history()
+
+		# remove from history function
+		def rm_from_history(f):
+			for e in historyElms:
+				if e["station"] == f["station"]:
+					historyElms.remove(e)
+			curSe["settings"].set_key("departures_history", json.dumps(historyElms, ensure_ascii=False))
+			process_history()
+			self.page.update()
 
 		self.add_sub("startPage", ft.Container(startPage, padding=10))
 

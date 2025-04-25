@@ -89,11 +89,25 @@ class RoutingPage(MyPage):
 					                           selected_icon=ft.Icons.STAR, on_click=toggle_star_button)
 					container5.d = e
 					containerRow = ft.Row(controls=[container1, container2, container3, container4, container5])
-					historyListView.controls.append(ft.GestureDetector(containerRow, mouse_cursor=ft.MouseCursor.CLICK,
-					                                                   on_tap=(lambda _d, f=e: (
-						                                                   history_clicked(f["from"], f["to"])))))
+					rowWithGest = ft.GestureDetector(containerRow, mouse_cursor=ft.MouseCursor.CLICK,
+					                                 on_tap=(lambda _d, f=e: (
+						                                 history_clicked(f["from"], f["to"]))))
+					historyListView.controls.append(ft.Dismissible(content=rowWithGest,
+					                                               secondary_background=ft.Container(
+						                                               bgcolor=ft.Colors.RED),
+					                                               dismiss_direction=ft.DismissDirection.END_TO_START,
+					                                               on_dismiss=lambda _z, f=e: rm_from_history(f)))
 
 		process_history()
+
+		# remove from history function
+		def rm_from_history(f):
+			for e in historyElms:
+				if e["from"] == f["from"] and e["to"] == f["to"]:
+					historyElms.remove(e)
+			curSe["settings"].set_key("connection_history", json.dumps(historyElms, ensure_ascii=False))
+			process_history()
+			self.page.update()
 
 		# listPage (basics more see display_list_page)
 		self.listPage = ft.Column()
@@ -274,7 +288,8 @@ class RoutingPage(MyPage):
 			if curSe["jsonData"] is None:
 				response = urlopen(
 					"https://www.mvg.de/api/bgw-pt/v3/routes?transportTypes=SCHIFF,RUFTAXI,BAHN,UBAHN,TRAM,SBAHN,BUS,REGIONAL_BUS&numberOfConnections=" + str(
-					resultLimit) + "&originStationGlobalId=" + curSe["positionID"] + "&destinationStationGlobalId=" +
+						resultLimit) + "&originStationGlobalId=" + curSe[
+						"positionID"] + "&destinationStationGlobalId=" +
 					curSe["position2ID"] + startTime)
 				routes = json.loads(response.read())
 				curSe["routes"] = routes
@@ -447,6 +462,7 @@ class RoutingPage(MyPage):
 			pData["lineDestination"] = p["line"]["destination"]
 			pData["toStation"] = p["to"]["name"]
 			pData["toTime"] = datetime.strptime(p["to"]["plannedDeparture"][:-6], "%Y-%m-%dT%H:%M:%S")
+			pData["uniqueId"] = rid["uniqueId"]
 
 			if "departureDelayInMinutes" in p["from"]:
 				pData["fromTimeDelay"] = p["from"]["departureDelayInMinutes"]
@@ -550,8 +566,8 @@ class RoutingPage(MyPage):
 			else:
 				betweenStationLabel = ft.Container(
 					ft.Text(pData["line"][:4], color=ft.Colors.WHITE, size=14, no_wrap=True),
-				                                   bgcolor=color_allocator(pData["line"]), width=35,
-				                                   alignment=ft.alignment.center)
+					bgcolor=color_allocator(pData["line"]), width=35,
+					alignment=ft.alignment.center)
 
 			betweenStationTile = ft.ExpansionTile(
 				title=ft.Row([betweenStationLabel, ft.Text(pData["lineDestination"], size=14)]),
